@@ -4,43 +4,198 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-   
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+
+        <ImageView
+            android:id="@+id/ivShowDescriptionImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/image_item_content_description"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#ff0000" >
+            android:background="@color/translucid" >
 
-            <ImageView
-                android:id="@+id/ivShowDescriptionImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitEnd"
-                android:src="@drawable/ic_launcher" />
-
+            <Button
+                android:id="@+id/btnSaveShow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/blue_button"
+                android:text="@string/save"
+                android:textColor="@color/text_save_button" />
         </FrameLayout>
+    </FrameLayout>
 
-    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="vertical" 
-        android:background="#0000ff">
+        android:orientation="vertical"
+        android:padding="@dimen/margen_description" >
 
         <ScrollView
-            android:id="@+id/scrollView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <LinearLayout
+            <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
-            </LinearLayout>
-        </ScrollView>
+                android:layout_height="wrap_content" >
 
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/margen_columnas"
+                        android:layout_weight="1"
+                        android:text="@string/season"
+                        android:textColor="@color/text_label_description" />
+
+                    <TextView
+                        android:id="@+id/tvSeason"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margen_columnas"
+                        android:layout_weight="1"
+                        android:textColor="@color/text_description" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/margen_columnas"
+                        android:layout_weight="1"
+                        android:text="@string/start_date"
+                        android:textColor="@color/text_label_description" />
+
+                    <TextView
+                        android:id="@+id/tvStartDate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margen_columnas"
+                        android:layout_weight="1"
+                        android:textColor="@color/text_description" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/margen_columnas"
+                        android:layout_weight="1"
+                        android:text="@string/status"
+                        android:textColor="@color/text_label_description" />
+
+                    <TextView
+                        android:id="@+id/tvStatus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margen_columnas"
+                        android:layout_weight="1"
+                        android:textColor="@color/text_description" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/margen_columnas"
+                        android:layout_weight="1"
+                        android:text="@string/duration"
+                        android:textColor="@color/text_label_description" />
+
+                    <TextView
+                        android:id="@+id/tvDuration"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margen_columnas"
+                        android:layout_weight="1"
+                        android:textColor="@color/text_description" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/margen_columnas"
+                        android:layout_weight="1"
+                        android:text="@string/network"
+                        android:textColor="@color/text_label_description" />
+
+                    <TextView
+                        android:id="@+id/tvNetwork"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margen_columnas"
+                        android:layout_weight="1"
+                        android:textColor="@color/text_description" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/margen_columnas"
+                        android:layout_weight="1"
+                        android:text="@string/time"
+                        android:textColor="@color/text_label_description" />
+
+                    <TextView
+                        android:id="@+id/tvTime"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margen_columnas"
+                        android:layout_weight="1"
+                        android:textColor="@color/text_description" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margen_description" >
+
+                    <TextView
+                        android:id="@+id/tvSummary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_span="2"
+                        android:layout_weight="1"
+                        android:textColor="@color/text_description" />
+                </TableRow>
+            </TableLayout>
+        </ScrollView>
     </LinearLayout>
 
 </LinearLayout>

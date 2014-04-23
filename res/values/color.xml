@@ -2,5 +2,16 @@
 <resources>
    
      <color name="texto_item">#ffffff</color>
+     
+     <color name="stroke">#ffffff</color>
+     <color name="text_save_button">#ffffff</color>
+     <color name="save_button_pressed">#2b4576</color>
+     <color name="translucid">#99000000</color>
+     <color name="stroke_blue_bright">#00ddff</color>
+      <color name="text_label_description">#00ddff</color>
+      <color name="text_description">#ffffff</color>
+      <color name="background">#000000</color>
+     
+     
 
 </resources>
