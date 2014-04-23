@@ -1,6 +1,7 @@
 package com.ninetoseven.series.adapter;
 
 import java.util.List;
+import java.util.Random;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,7 +18,7 @@ public class NewEpisodeAdapter extends BaseAdapter {
 
 	private Context context;
 	private List<Episode> eList;
-
+	Random r = new Random();
 	static class ViewHolder {
 		ImageView ivShow;
 		TextView tvShowName;
@@ -82,6 +83,16 @@ public class NewEpisodeAdapter extends BaseAdapter {
 												// que reuse el view
 		// Util.imageLoader.displayImage("file:///"+Util.getColumna("cache",
 		// context, lista.get(position).getId(),"Podcast"), holder.ivPod);
+	
+		if(r.nextInt(2)==1)
+		{
+			holder.ivShow.setImageResource(R.drawable.show);
+		}
+		else
+		{
+			holder.ivShow.setImageResource(R.drawable.show2);
+		}
+		
 		holder.tvShowName.setText(eList.get(position).getShowName());
 		holder.tvEpisode.setText(eList.get(position).getEpisode());
 		holder.tvEpisodeName.setText(eList.get(position).getEpisodeName());
