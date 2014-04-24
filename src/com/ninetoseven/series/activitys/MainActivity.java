@@ -1,22 +1,27 @@
-package com.ninetoseven.series;
+package com.ninetoseven.series.activitys;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.SearchView;
 
+import com.ninetoseven.series.R;
 import com.ninetoseven.series.adapter.NewEpisodeAdapter;
 import com.ninetoseven.series.model.Episode;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 
 		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
+			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
@@ -34,6 +39,15 @@ public class MainActivity extends ActionBarActivity {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		 // Associate searchable configuration with the SearchView
+		
+		 // Associate searchable configuration with the SearchView
+	    SearchManager searchManager =
+	           (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+	    SearchView searchView =
+	            (SearchView) menu.findItem(R.id.search).getActionView();
+	    searchView.setSearchableInfo(
+	            searchManager.getSearchableInfo( new ComponentName(this, SearchActivity.class)));
 		return true;
 	}
 
@@ -42,10 +56,10 @@ public class MainActivity extends ActionBarActivity {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+	/*	int id = item.getItemId();
+		if (id == R.id.search) {
 			return true;
-		}
+		}*/
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -80,6 +94,8 @@ public class MainActivity extends ActionBarActivity {
 			
 			return rootView;
 		}
+		
+		
 		
 		private void fillList(int num)
 		{

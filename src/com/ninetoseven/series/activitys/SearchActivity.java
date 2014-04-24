@@ -3,23 +3,23 @@ package com.ninetoseven.series.activitys;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.SearchView;
 
 import com.ninetoseven.series.R;
-import com.ninetoseven.series.adapter.NewEpisodeAdapter;
 import com.ninetoseven.series.adapter.SearchResultAdapter;
-import com.ninetoseven.series.model.Episode;
 import com.ninetoseven.series.model.Show;
 
-public class SearchActivity extends ActionBarActivity{
+public class SearchActivity extends Activity{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,20 +27,26 @@ public class SearchActivity extends ActionBarActivity{
 		setContentView(R.layout.activity_main);
 
 		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
+			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
 
-	@Override
+	/*@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		 SearchManager searchManager =
+		           (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		    SearchView searchView =
+		            (SearchView) menu.findItem(R.id.search).getActionView();
+		    searchView.setSearchableInfo(
+		            searchManager.getSearchableInfo(getComponentName()));
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
@@ -50,7 +56,7 @@ public class SearchActivity extends ActionBarActivity{
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
+	}*/
 
 	/**
 	 * A placeholder fragment containing a simple view.
