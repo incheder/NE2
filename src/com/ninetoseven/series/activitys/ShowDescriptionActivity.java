@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ninetoseven.series.R;
+import com.ninetoseven.series.util.Util;
 
 public class ShowDescriptionActivity extends ActionBarActivity {
 
@@ -21,7 +22,7 @@ public class ShowDescriptionActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		Util.screenSize(this);
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
@@ -69,7 +70,7 @@ public class ShowDescriptionActivity extends ActionBarActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_show_descripcion, container,
+			View rootView = inflater.inflate(R.layout.show, container,
 					false);
 			ivShow = (ImageView)rootView.findViewById(R.id.ivShowDescriptionImage);
 			tvDuration = (TextView)rootView.findViewById(R.id.tvDuration);

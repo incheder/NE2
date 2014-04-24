@@ -38,30 +38,29 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		 // Associate searchable configuration with the SearchView
-		
+		getMenuInflater().inflate(R.menu.main, menu);		
 		 // Associate searchable configuration with the SearchView
 	    SearchManager searchManager =
 	           (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 	    SearchView searchView =
 	            (SearchView) menu.findItem(R.id.search).getActionView();
+	    //searchView.setSubmitButtonEnabled(true );
 	    searchView.setSearchableInfo(
 	            searchManager.getSearchableInfo( new ComponentName(this, SearchActivity.class)));
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-	/*	int id = item.getItemId();
+	int id = item.getItemId();
 		if (id == R.id.search) {
 			return true;
-		}*/
+		}
 		return super.onOptionsItemSelected(item);
-	}
+	}*/
 
 	/**
 	 * A placeholder fragment containing a simple view.
