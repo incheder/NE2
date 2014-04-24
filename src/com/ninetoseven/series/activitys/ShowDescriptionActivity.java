@@ -2,29 +2,38 @@ package com.ninetoseven.series.activitys;
 
 import java.util.Random;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.StringRequest;
 import com.ninetoseven.series.R;
+import com.ninetoseven.series.model.Show;
+import com.ninetoseven.series.parser.ShowInfoParser;
 import com.ninetoseven.series.util.Util;
+import com.ninetoseven.series.util.VolleySingleton;
 
-public class ShowDescriptionActivity extends ActionBarActivity {
-
+public class ShowDescriptionActivity extends Activity {
+	private static final String TAG = "NE2";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		Util.screenSize(this);
 		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
+			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
@@ -52,18 +61,32 @@ public class ShowDescriptionActivity extends ActionBarActivity {
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment {
+	public static class PlaceholderFragment extends Fragment{
 
-		private ImageView ivShow;
+		
+		private NetworkImageView ivShow;
 		private TextView tvSeason,tvStart,tvStatus,tvDuration,tvNetwork,tvTime,tvSummary;
 		Random r = new Random();
+		
+		String url;
+		
 		public PlaceholderFragment() {
+			
+		}
+		
+		@Override
+		public void onAttach(Activity activity) {
+			// TODO Auto-generated method stub
+			super.onAttach(activity);
+			url = "http://services.tvrage.com/myfeeds/showinfo.php?key=zCBJPmzNSndLMGeApDyD&sid=3741";
 		}
 		
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
 			super.onCreate(savedInstanceState);
+			
+			
 			
 		}
 
@@ -72,7 +95,7 @@ public class ShowDescriptionActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.show, container,
 					false);
-			ivShow = (ImageView)rootView.findViewById(R.id.ivShowDescriptionImage);
+			ivShow = (NetworkImageView)rootView.findViewById(R.id.ivShowDescriptionImage);
 			tvDuration = (TextView)rootView.findViewById(R.id.tvDuration);
 			tvNetwork = (TextView)rootView.findViewById(R.id.tvNetwork);
 			tvSeason = (TextView)rootView.findViewById(R.id.tvSeason);
@@ -81,13 +104,9 @@ public class ShowDescriptionActivity extends ActionBarActivity {
 			tvSummary = (TextView)rootView.findViewById(R.id.tvSummary);
 			tvTime = (TextView)rootView.findViewById(R.id.tvTime);
 			
-			tvDuration.setText("60 min");
-			tvNetwork.setText("ABC");
-			tvSeason.setText("5");
-			tvStart.setText("22-05-2013");
-			tvStatus.setText("live");
-			tvSummary.setText("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,");
-			tvTime.setText("Thursday at 10:00 pm");
+			
+			
+			
 			
 			
 			if(r.nextInt(2)==1)
@@ -101,6 +120,56 @@ public class ShowDescriptionActivity extends ActionBarActivity {
 			
 			
 			return rootView;
+		}
+		
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			// TODO Auto-generated method stub
+			super.onActivityCreated(savedInstanceState);
+			readShow(url);
+			
+		}
+		
+		private void readShow(String url)
+		{
+			
+			RequestQueue queue = VolleySingleton.getInstance(getActivity()).getRequestQueue();
+			StringRequest request = new StringRequest(url, new Listener<String>() {
+
+				@Override
+				public void onResponse(String response) {
+					//manejamos la respuesta, parseandola
+					
+					Show show= new ShowInfoParser(response).parse();
+					if(show!=null)
+					{
+						Log.d(TAG, "showId: "+show.getId());
+						fillShowViews(show);
+						
+					}
+				}
+			}, new ErrorListener() {
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+				//manjemos el error
+					
+				}
+			});
+			queue.add(request);
+		}
+		
+		private void fillShowViews(Show show)
+		{
+			tvDuration.setText(show.getRuntime()+" min.");
+			tvNetwork.setText(show.getNetwork());
+			tvSeason.setText(show.getSeasons());
+			tvStart.setText(show.getStarted());
+			tvStatus.setText(show.getStatus());
+			tvSummary.setText(show.getSummary());
+			tvTime.setText(show.getAirday()+" "+show.getAirtime());
+			ImageLoader imageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
+			ivShow.setImageUrl(show.getImage(), imageLoader);
 		}
 		
 		
