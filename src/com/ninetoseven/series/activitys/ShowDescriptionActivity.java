@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -66,6 +68,8 @@ public class ShowDescriptionActivity extends Activity {
 		
 		private NetworkImageView ivShow;
 		private TextView tvSeason,tvStart,tvStatus,tvDuration,tvNetwork,tvTime,tvSummary;
+		private ProgressBar pbLoading;
+		private LinearLayout llShowInfo;
 		Random r = new Random();
 		
 		String url;
@@ -95,6 +99,8 @@ public class ShowDescriptionActivity extends Activity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.show, container,
 					false);
+			llShowInfo = (LinearLayout)rootView.findViewById(R.id.llShowInfo);
+			llShowInfo.setVisibility(View.GONE);
 			ivShow = (NetworkImageView)rootView.findViewById(R.id.ivShowDescriptionImage);
 			tvDuration = (TextView)rootView.findViewById(R.id.tvDuration);
 			tvNetwork = (TextView)rootView.findViewById(R.id.tvNetwork);
@@ -103,22 +109,7 @@ public class ShowDescriptionActivity extends Activity {
 			tvStatus = (TextView)rootView.findViewById(R.id.tvStatus);
 			tvSummary = (TextView)rootView.findViewById(R.id.tvSummary);
 			tvTime = (TextView)rootView.findViewById(R.id.tvTime);
-			
-			
-			
-			
-			
-			
-			if(r.nextInt(2)==1)
-			{
-				ivShow.setImageResource(R.drawable.show);
-			}
-			else
-			{
-				ivShow.setImageResource(R.drawable.show2);
-			}
-			
-			
+			pbLoading = (ProgressBar)rootView.findViewById(R.id.pbLoadingShow);
 			return rootView;
 		}
 		
@@ -135,24 +126,37 @@ public class ShowDescriptionActivity extends Activity {
 			
 			RequestQueue queue = VolleySingleton.getInstance(getActivity()).getRequestQueue();
 			StringRequest request = new StringRequest(url, new Listener<String>() {
-
+				
 				@Override
 				public void onResponse(String response) {
 					//manejamos la respuesta, parseandola
 					
-					Show show= new ShowInfoParser(response).parse();
-					if(show!=null)
+					if(response!=null)
 					{
-						Log.d(TAG, "showId: "+show.getId());
-						fillShowViews(show);
+						Show show= new ShowInfoParser(response).parse();
+						if(show!=null)
+						{
+							Log.d(TAG, "showId: "+show.getId());
+							fillShowViews(show);
+							
+						}
+						else
+						{
+							//hubo un probblema al leer el show
+						}
+					}
+					else
+					{
 						
 					}
+					
 				}
 			}, new ErrorListener() {
 
 				@Override
 				public void onErrorResponse(VolleyError error) {
 				//manjemos el error
+					Log.e(TAG, "error: "+error.getMessage());
 					
 				}
 			});
@@ -161,6 +165,8 @@ public class ShowDescriptionActivity extends Activity {
 		
 		private void fillShowViews(Show show)
 		{
+			pbLoading.setVisibility(View.GONE);
+			llShowInfo.setVisibility(View.VISIBLE);
 			tvDuration.setText(show.getRuntime()+" min.");
 			tvNetwork.setText(show.getNetwork());
 			tvSeason.setText(show.getSeasons());
