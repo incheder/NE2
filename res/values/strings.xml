@@ -16,5 +16,6 @@
     <string name="summary">Summary</string>
     <string name="menu_search">Search</string>
      <string name="error_insert_db">An error ocur while saving the show. Please, try again </string>
-
+      <string name="error_insert_ep_db">An error ocur while saving the next episode. Please, try to save the show again </string>
+	<string name="show_already_saved">Show already saved</string>
 </resources>

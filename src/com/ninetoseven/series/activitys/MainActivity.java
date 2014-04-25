@@ -6,9 +6,14 @@ import java.util.List;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,18 +25,25 @@ import android.widget.SearchView;
 import com.ninetoseven.series.R;
 import com.ninetoseven.series.adapter.NewEpisodeAdapter;
 import com.ninetoseven.series.model.Episode;
+import com.ninetoseven.series.util.SaveShowService;
 
 public class MainActivity extends Activity {
 
+	private static final String TAG = "NE2";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		IntentFilter mSaveIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ACTION);
+		
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		SaveReceiver mSaveReceiver = new SaveReceiver();
+		LocalBroadcastManager.getInstance(this).registerReceiver(mSaveReceiver, mSaveIntentFilter);
+		
 	}
 
 	@Override
@@ -111,4 +123,19 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	private class SaveReceiver extends BroadcastReceiver
+	{
+		
+
+		public SaveReceiver() {
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			Log.d(TAG, "actualiza grid");
+		}
+		
+	}
 }
