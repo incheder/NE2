@@ -1,6 +1,10 @@
 package com.ninetoseven.series.model;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
 //good old POJO
-public class Show{
+public class Show implements Parcelable{
 	private String showName;
 	private String id;
 	private String showLink;
@@ -15,6 +19,12 @@ public class Show{
 	private String airtime;
 	private String airday;
 	private String timezone;
+	private Episode latestepisode;
+	private Episode nextepisode;
+	
+	public Show() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public String getShowName() {
 		return showName;
@@ -127,5 +137,78 @@ public class Show{
 	public void setTimezone(String timezone) {
 		this.timezone = timezone;
 	}
+
+	public Episode getLatestepisode() {
+		return latestepisode;
+	}
+
+	public void setLatestepisode(Episode latestepisode) {
+		this.latestepisode = latestepisode;
+	}
+
+	public Episode getNextepisode() {
+		return nextepisode;
+	}
+
+	public void setNextepisode(Episode nextepisode) {
+		this.nextepisode = nextepisode;
+	}
+	
+	@Override
+	public int describeContents() {
+		
+		return 0;
+	}
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		
+		dest.writeString(showName);
+		dest.writeString(id);
+		dest.writeString(showLink);
+		dest.writeString(seasons);
+		dest.writeString(image);
+		dest.writeString(started);
+		dest.writeString(ended);
+		dest.writeString(status);
+		dest.writeString(summary);
+		dest.writeString(runtime);
+		dest.writeString(network);
+		dest.writeString(airtime);
+		dest.writeString(airday);
+		dest.writeString(timezone);
+		dest.writeParcelable(latestepisode, flags);
+		dest.writeParcelable(nextepisode, flags);
+	}
+	
+	public Show (Parcel in) {
+		showName= in.readString();
+		id= in.readString();
+		showLink= in.readString();
+		seasons= in.readString();
+		image= in.readString();
+		started= in.readString();
+		ended= in.readString();
+		status= in.readString();
+		summary= in.readString();
+		runtime= in.readString();
+		network= in.readString();
+		airtime= in.readString();
+		airday= in.readString();
+		timezone= in.readString();
+		latestepisode= in.readParcelable(getClass().getClassLoader());
+		nextepisode= in.readParcelable(getClass().getClassLoader());
+	}
+	
+	// this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
+    public static final Parcelable.Creator<Show> CREATOR = new Parcelable.Creator<Show>() {
+        public Show createFromParcel(Parcel in) {
+            return new Show(in);
+        }
+
+        public Show[] newArray(int size) {
+            return new Show[size];
+        }
+    };
 
 }

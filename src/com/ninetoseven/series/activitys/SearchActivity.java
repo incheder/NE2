@@ -1,5 +1,7 @@
 package com.ninetoseven.series.activitys;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,18 +11,32 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.ninetoseven.series.R;
 import com.ninetoseven.series.adapter.SearchResultAdapter;
 import com.ninetoseven.series.model.Show;
+import com.ninetoseven.series.parser.ShowSearchParser;
 import com.ninetoseven.series.util.MySuggestionProvider;
+import com.ninetoseven.series.util.VolleySingleton;
 
 public class SearchActivity extends Activity{
 
+	private static final String TAG = "NE2";
+	Bundle args = new Bundle();
+	
 	@Override
 	protected void onNewIntent(Intent intent) {
 		// TODO Auto-generated method stub
@@ -35,8 +51,11 @@ public class SearchActivity extends Activity{
 
 		handleIntent(getIntent());
 		if (savedInstanceState == null) {
+			
+			PlaceholderFragment placeHolderFragment = new PlaceholderFragment();
+			placeHolderFragment.setArguments(args);
 			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+					.add(R.id.container, placeHolderFragment).commit();
 		}
 	}
 	
@@ -45,13 +64,22 @@ public class SearchActivity extends Activity{
 	 * @param intent que tiene el string para hacer el query
 	 */
 	 private void handleIntent(Intent intent) {
-
+		 String query="";
 	        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-	            String query = intent.getStringExtra(SearchManager.QUERY);  
+	              
 	            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
 	                    MySuggestionProvider.AUTHORITY, MySuggestionProvider.MODE);
-	            suggestions.saveRecentQuery(query, null);
-	            //use the query to search your data somehow
+	            suggestions.saveRecentQuery(intent.getStringExtra(SearchManager.QUERY), null);
+	           
+	            try {
+	            	
+					query = "http://services.tvrage.com/feeds/search.php?show="+URLEncoder.encode(intent.getStringExtra(SearchManager.QUERY),"utf-8");
+					 args.putString("query", query);
+				   
+				} catch (UnsupportedEncodingException e) {
+					
+					Log.e(TAG, "error:"+e.getMessage());
+				}
 	        }
 	    }
 
@@ -84,13 +112,24 @@ public class SearchActivity extends Activity{
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment {
+	public static class PlaceholderFragment extends Fragment implements OnItemClickListener {
 
 		
 		private SearchResultAdapter adapter;
 		private GridView gvSearch;
+		private ProgressBar pbLoading;
 		private List<Show> sList;
+		private String query;
 		public PlaceholderFragment() {
+		}
+		
+		@Override
+		public void onAttach(Activity activity) {
+			super.onAttach(activity);
+			if(getArguments()!=null)
+			{
+				query = getArguments().getString("query");
+			}
 		}
 		
 		@Override
@@ -106,25 +145,72 @@ public class SearchActivity extends Activity{
 			View rootView = inflater.inflate(R.layout.fragment_search, container,
 					false);
 			gvSearch = (GridView)rootView.findViewById(R.id.gvBusqueda);
-			fillList(20);
-			adapter = new SearchResultAdapter(getActivity(), sList);
-			gvSearch.setAdapter(adapter);
-			
-			
-			
-			
-			
+			gvSearch.setOnItemClickListener(this);
+			pbLoading = (ProgressBar)rootView.findViewById(R.id.pbLoadingSearch);
 			return rootView;
 		}
 		
-		private void fillList(int num)
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+			fillList();
+			
+		}
+		
+		@Override
+		public void onItemClick(AdapterView<?> adapter, View view, int position,
+				long id) {
+			Intent showInfo = new Intent(getActivity(),ShowDescriptionActivity.class);
+			showInfo.putExtra("id", String.valueOf(adapter.getItemIdAtPosition(position)));
+			startActivity(showInfo);
+			
+		}
+		
+		
+		
+		private void fillList()
 		{
-			Show show= null;
-			for (int i = 0; i < num; i++) {
-				 show = new Show();
-				show.setShowName("Show Name fdfd dfdfd fdfdf dfdfdf dfdfdf dfdfdf dfdf d dfdfdf");
-				sList.add(show);
-			}
+			
+			RequestQueue queue = VolleySingleton.getInstance(getActivity()).getRequestQueue();
+			StringRequest request = new StringRequest(query, new Listener<String>() {
+				
+				@Override
+				public void onResponse(String response) {
+					//manejamos la respuesta, parseandola
+					
+					if(response!=null)
+					{
+						sList= new ShowSearchParser(response).parse();
+						if(sList!=null)
+						{
+							pbLoading.setVisibility(View.GONE);
+							adapter = new SearchResultAdapter(getActivity(), sList);
+							gvSearch.setAdapter(adapter);
+							
+						}
+						else
+						{
+							//hubo un probblema al leer el show
+							Log.e(TAG, "search list null");
+						}
+					}
+					else
+					{
+						Log.e(TAG, "response null");
+					}
+					
+				}
+			}, new ErrorListener() {
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+				//manjemos el error poniendo una imagen de un gato
+					Log.e(TAG, "volley error: "+error.getMessage());
+					
+				}
+			});
+			queue.add(request);
+			
 		}
 		
 		

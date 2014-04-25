@@ -1,11 +1,18 @@
 package com.ninetoseven.series.model;
 
-public class Episode {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Episode implements Parcelable{
 	private String showName;
-	private String episode;
-	private String episodeName;
-	private String date;
-	private String time;
+	private String number;
+	private String title;
+	private String airdate;
+	private String airtime;
+
+	public Episode() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public String getShowName() {
 		return showName;
@@ -15,35 +22,70 @@ public class Episode {
 		this.showName = showName;
 	}
 
-	public String getEpisode() {
-		return episode;
+	public String getNumber() {
+		return number;
 	}
 
-	public void setEpisode(String episode) {
-		this.episode = episode;
+	public void setNumber(String number) {
+		this.number = number;
 	}
 
-	public String getEpisodeName() {
-		return episodeName;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setEpisodeName(String episodeName) {
-		this.episodeName = episodeName;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public String getDate() {
-		return date;
+	public String getAirdate() {
+		return airdate;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setAirdate(String airdate) {
+		this.airdate = airdate;
 	}
 
-	public String getTime() {
-		return time;
+	public String getAirtime() {
+		return airtime;
 	}
 
-	public void setTime(String time) {
-		this.time = time;
+	public void setAirtime(String airtime) {
+		this.airtime = airtime;
 	}
+
+	@Override
+	public int describeContents() {
+		
+		return 0;
+	}
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		
+		dest.writeString(showName);
+		dest.writeString(number);
+		dest.writeString(title);
+		dest.writeString(airdate);
+		dest.writeString(airtime);
+	}
+	
+	public Episode(Parcel in) {
+		showName= in.readString();
+		number= in.readString();
+		title= in.readString();
+		airdate= in.readString();
+		airtime= in.readString();
+	}
+	
+	// this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
+    public static final Parcelable.Creator<Episode> CREATOR = new Parcelable.Creator<Episode>() {
+        public Episode createFromParcel(Parcel in) {
+            return new Episode(in);
+        }
+
+        public Episode[] newArray(int size) {
+            return new Episode[size];
+        }
+    };
 }

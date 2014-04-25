@@ -94,10 +94,10 @@ public class NewEpisodeAdapter extends BaseAdapter {
 		}
 		
 		holder.tvShowName.setText(eList.get(position).getShowName());
-		holder.tvEpisode.setText(eList.get(position).getEpisode());
-		holder.tvEpisodeName.setText(eList.get(position).getEpisodeName());
-		holder.tvDate.setText(eList.get(position).getDate());
-		holder.tvTime.setText(eList.get(position).getTime());
+		holder.tvEpisode.setText(eList.get(position).getNumber());
+		holder.tvEpisodeName.setText(eList.get(position).getTitle());
+		holder.tvDate.setText(eList.get(position).getAirdate());
+		holder.tvTime.setText(eList.get(position).getAirtime());
 
 		return convertView;
 	}

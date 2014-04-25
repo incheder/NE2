@@ -102,10 +102,10 @@ public class MainActivity extends Activity {
 			for (int i = 0; i < num; i++) {
 				episode = new Episode();
 				episode.setShowName("Show Name");
-				episode.setEpisode("01x05");
-				episode.setEpisodeName("Episode Name");
-				episode.setDate("2014-04-24");
-				episode.setTime("Thursday at 10:00 pm");
+				episode.setNumber("01x05");
+				episode.setTitle("Episode Name");
+				episode.setAirdate("2014-04-24");
+				episode.setAirtime("Thursday at 10:00 pm");
 				eList.add(episode);
 			}
 		}

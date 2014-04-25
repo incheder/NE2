@@ -15,5 +15,6 @@
     <string name="time">Time</string>
     <string name="summary">Summary</string>
     <string name="menu_search">Search</string>
+     <string name="error_insert_db">An error ocur while saving the show. Please, try again </string>
 
 </resources>

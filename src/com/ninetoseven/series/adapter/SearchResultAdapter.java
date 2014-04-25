@@ -45,7 +45,7 @@ public class SearchResultAdapter extends BaseAdapter {
 	}
 
 	public long getItemId(int position) {
-		return position;
+		return Long.valueOf(sList.get(position).getId());
 
 	}
 
