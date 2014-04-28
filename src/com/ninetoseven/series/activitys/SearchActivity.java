@@ -8,17 +8,22 @@ import java.util.List;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
@@ -30,6 +35,7 @@ import com.ninetoseven.series.adapter.SearchResultAdapter;
 import com.ninetoseven.series.model.Show;
 import com.ninetoseven.series.parser.ShowSearchParser;
 import com.ninetoseven.series.util.MySuggestionProvider;
+import com.ninetoseven.series.util.SaveShowService;
 import com.ninetoseven.series.util.VolleySingleton;
 
 public class SearchActivity extends Activity{
@@ -50,6 +56,10 @@ public class SearchActivity extends Activity{
 		setContentView(R.layout.activity_main);
 
 		handleIntent(getIntent());
+		
+		IntentFilter mSaveIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ACTION);
+		IntentFilter mErrorIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ERROR);
+		
 		if (savedInstanceState == null) {
 			
 			PlaceholderFragment placeHolderFragment = new PlaceholderFragment();
@@ -57,6 +67,12 @@ public class SearchActivity extends Activity{
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, placeHolderFragment).commit();
 		}
+		
+		ErrorReceiver mErrorReceiver = new ErrorReceiver();
+		LocalBroadcastManager.getInstance(this).registerReceiver(mErrorReceiver, mErrorIntentFilter);
+		
+		SaveReceiver mSaveReceiver = new SaveReceiver();
+		LocalBroadcastManager.getInstance(this).registerReceiver(mSaveReceiver, mSaveIntentFilter);
 	}
 	
 	/**
@@ -213,6 +229,43 @@ public class SearchActivity extends Activity{
 			
 		}
 		
+		
+	}
+	
+	private class ErrorReceiver extends BroadcastReceiver
+	{
+		
+
+		public ErrorReceiver() {
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			Log.d(TAG, "error al guardar");
+			Toast.makeText(getApplicationContext(),
+					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR),
+					Toast.LENGTH_SHORT).show();
+		}
+		
+	}
+	
+	private class SaveReceiver extends BroadcastReceiver
+	{
+		
+
+		public SaveReceiver() {
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			Toast.makeText(getApplicationContext(),
+					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS),
+					Toast.LENGTH_SHORT).show();
+		}
 		
 	}
 }

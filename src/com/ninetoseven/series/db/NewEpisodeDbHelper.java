@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.ninetoseven.series.db.LastEpisodeContract.LastEntry;
 import com.ninetoseven.series.db.NextEpisodeContract.NextEntry;
 import com.ninetoseven.series.db.ShowContract.ShowEntry;
 
@@ -30,16 +31,27 @@ public class NewEpisodeDbHelper extends SQLiteOpenHelper{
 	ShowEntry.COLUMN_NAME_TIMEZONE + TEXT_TYPE +" );";
 	
 	private static final String SQL_CREATE_NEXT_EPISODE = "CREATE TABLE "+NextEntry.TABLE_NAME+" ("+NextEntry._ID+" INTEGER PRIMARY KEY,"+
+			NextEntry.COLUMN_NAME_SHOWNAME + TEXT_TYPE + COMA_SEP+
 			NextEntry.COLUMN_NAME_SHOW_ID + TEXT_TYPE + COMA_SEP+
 			NextEntry.COLUMN_NAME_NUMBER + TEXT_TYPE + COMA_SEP+
 			NextEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMA_SEP+
 			NextEntry.COLUMN_NAME_AIRDATE + TEXT_TYPE + COMA_SEP+
 			NextEntry.COLUMN_NAME_AIRTIME + TEXT_TYPE +" );";
 	
+	private static final String SQL_CREATE_LAST_EPISODE = "CREATE TABLE "+LastEntry.TABLE_NAME+" ("+LastEntry._ID+" INTEGER PRIMARY KEY,"+
+			LastEntry.COLUMN_NAME_SHOWNAME + TEXT_TYPE + COMA_SEP+
+			LastEntry.COLUMN_NAME_SHOW_ID + TEXT_TYPE + COMA_SEP+
+			LastEntry.COLUMN_NAME_NUMBER + TEXT_TYPE + COMA_SEP+
+			LastEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMA_SEP+
+			LastEntry.COLUMN_NAME_AIRDATE + TEXT_TYPE + COMA_SEP+
+			LastEntry.COLUMN_NAME_AIRTIME + TEXT_TYPE +" );";
+	
 	private static final String SQL_DELETE_SHOW =
 		    "DROP TABLE IF EXISTS " + ShowEntry.TABLE_NAME;
 	private static final String SQL_DELETE_NEXT_EPISODE =
 		    "DROP TABLE IF EXISTS " + NextEntry.TABLE_NAME;
+	private static final String SQL_DELETE_LAST_EPISODE =
+		    "DROP TABLE IF EXISTS " + LastEntry.TABLE_NAME;
 	
 
 	public NewEpisodeDbHelper(Context context) {
@@ -51,6 +63,7 @@ public class NewEpisodeDbHelper extends SQLiteOpenHelper{
 		
 		db.execSQL(SQL_CREATE_SHOW);
 		db.execSQL(SQL_CREATE_NEXT_EPISODE);
+		db.execSQL(SQL_CREATE_LAST_EPISODE);
 	}
 	
 	@Override
@@ -58,6 +71,7 @@ public class NewEpisodeDbHelper extends SQLiteOpenHelper{
 		
 		  db.execSQL(SQL_DELETE_SHOW);
 		  db.execSQL(SQL_DELETE_NEXT_EPISODE);
+		  db.execSQL(SQL_DELETE_LAST_EPISODE);
 	      onCreate(db);
 	}
 	

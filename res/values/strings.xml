@@ -18,4 +18,6 @@
      <string name="error_insert_db">An error ocur while saving the show. Please, try again </string>
       <string name="error_insert_ep_db">An error ocur while saving the next episode. Please, try to save the show again </string>
 	<string name="show_already_saved">Show already saved</string>
+	<string name="show_saved">Show saved</string>
+	<string name="search_for_shows">Use the search menu to find TV Shows</string>
 </resources>

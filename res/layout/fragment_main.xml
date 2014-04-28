@@ -14,4 +14,14 @@
         android:numColumns="@integer/grid_rows" >
     </GridView>
 
+    <TextView
+        android:id="@+id/emptyNew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/search_for_shows"
+        android:visibility="gone"
+        android:textColor="@color/texto_empty" />
+
 </RelativeLayout>

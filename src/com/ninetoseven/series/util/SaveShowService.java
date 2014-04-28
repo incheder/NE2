@@ -9,9 +9,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.ninetoseven.series.R;
+import com.ninetoseven.series.db.LastEpisodeContract.LastEntry;
 import com.ninetoseven.series.db.NewEpisodeDbHelper;
 import com.ninetoseven.series.db.NextEpisodeContract.NextEntry;
 import com.ninetoseven.series.db.ShowContract.ShowEntry;
@@ -71,25 +71,50 @@ public class SaveShowService extends IntentService {
 			}
 			
 			
-			//añadimos el nuevo episodio
-			if(exist(db, show.getNextepisode().getNumber(),NextEntry.COLUMN_NAME_NUMBER , NextEntry.TABLE_NAME))
+			//añadimos el nuevo episodio si es que no es NULL
+			if(show.getNextepisode()!=null)
 			{
-				
-			}
-			else
-			{
-				ContentValues nextEp = new ContentValues();
-				nextEp.put(NextEntry.COLUMN_NAME_SHOW_ID, show.getId());
-				nextEp.put(NextEntry.COLUMN_NAME_NUMBER, show.getNextepisode().getNumber());
-				nextEp.put(NextEntry.COLUMN_NAME_TITLE, show.getNextepisode().getTitle());
-				nextEp.put(NextEntry.COLUMN_NAME_AIRDATE, show.getNextepisode().getAirdate());
-				nextEp.put(NextEntry.COLUMN_NAME_AIRTIME, show.getNextepisode().getAirtime());
-				if(db.insert(NextEntry.TABLE_NAME, null, nextEp)==-1)
+				if(exist(db, show.getNextepisode().getNumber(),NextEntry.COLUMN_NAME_NUMBER , NextEntry.TABLE_NAME))
 				{
-					//Toast.makeText(getApplicationContext(), R.string.error_insert_ep_db, Toast.LENGTH_SHORT).show();
-					error =getApplicationContext().getResources().getString(R.string.error_insert_ep_db);
+					
+				}
+				else
+				{
+					ContentValues nextEp = new ContentValues();
+					nextEp.put(NextEntry.COLUMN_NAME_SHOWNAME, show.getShowName());
+					nextEp.put(NextEntry.COLUMN_NAME_SHOW_ID, show.getId());
+					nextEp.put(NextEntry.COLUMN_NAME_NUMBER, show.getNextepisode().getNumber());
+					nextEp.put(NextEntry.COLUMN_NAME_TITLE, show.getNextepisode().getTitle());
+					nextEp.put(NextEntry.COLUMN_NAME_AIRDATE, show.getNextepisode().getAirdate());
+					nextEp.put(NextEntry.COLUMN_NAME_AIRTIME, show.getNextepisode().getAirtime());
+					if(db.insert(NextEntry.TABLE_NAME, null, nextEp)==-1)
+					{
+						//Toast.makeText(getApplicationContext(), R.string.error_insert_ep_db, Toast.LENGTH_SHORT).show();
+						error =getApplicationContext().getResources().getString(R.string.error_insert_ep_db);
+					}
 				}
 			}
+			
+			//añadimos el ultimo episodio si es que no es null
+			if(show.getLatestepisode()!=null)
+			{
+				if(!exist(db, show.getLatestepisode().getNumber(),LastEntry.COLUMN_NAME_NUMBER , LastEntry.TABLE_NAME))
+				{//si no existe
+					ContentValues lastEp = new ContentValues();
+					lastEp.put(NextEntry.COLUMN_NAME_SHOWNAME, show.getShowName());
+					lastEp.put(LastEntry.COLUMN_NAME_SHOW_ID, show.getId());
+					lastEp.put(LastEntry.COLUMN_NAME_NUMBER, show.getLatestepisode().getNumber());
+					lastEp.put(LastEntry.COLUMN_NAME_TITLE, show.getLatestepisode().getTitle());
+					lastEp.put(LastEntry.COLUMN_NAME_AIRDATE, show.getLatestepisode().getAirdate());
+					lastEp.put(LastEntry.COLUMN_NAME_AIRTIME, show.getLatestepisode().getAirtime());
+					if(db.insert(LastEntry.TABLE_NAME, null, lastEp)==-1)
+					{
+						//Toast.makeText(getApplicationContext(), R.string.error_insert_ep_db, Toast.LENGTH_SHORT).show();
+						error =getApplicationContext().getResources().getString(R.string.error_insert_ep_db);
+					}
+				}
+			}
+			
 			
 			
 			
@@ -102,7 +127,7 @@ public class SaveShowService extends IntentService {
 			{
 				Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
 				 // Puts the extra into the Intent
-				 .putExtra(Constants.EXTENDED_DATA_STATUS, "");
+				 .putExtra(Constants.EXTENDED_DATA_STATUS, getApplicationContext().getResources().getString(R.string.show_saved));
 				 // Broadcasts the Intent to receivers in this app.
 				 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(localIntent);
 			}
@@ -127,13 +152,13 @@ public class SaveShowService extends IntentService {
 		String[] projection={
 				column	
 			};
-			String selection=column+"='"+id+"'";
-			Cursor c = db.query(table, projection, selection, null, null, null, null);
-			if(c.moveToFirst())
-			{
-				return true;
-			}
-			return false;
+		String selection=column+"='"+id+"'";
+		Cursor c = db.query(table, projection, selection, null, null, null, null);
+		if(c.moveToFirst())
+		{
+			return true;
+		}
+		return false;
 		
 	}
 	

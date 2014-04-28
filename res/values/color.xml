@@ -2,6 +2,7 @@
 <resources>
    
      <color name="texto_item">#ffffff</color>
+     <color name="texto_empty">#ffffff</color>
      
      <color name="stroke">#ffffff</color>
      <color name="text_save_button">#ffffff</color>

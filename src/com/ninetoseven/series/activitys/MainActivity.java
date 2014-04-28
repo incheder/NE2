@@ -16,34 +16,47 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.ninetoseven.series.R;
 import com.ninetoseven.series.adapter.NewEpisodeAdapter;
 import com.ninetoseven.series.model.Episode;
+import com.ninetoseven.series.util.FillNewEpisodeListService;
 import com.ninetoseven.series.util.SaveShowService;
 
 public class MainActivity extends Activity {
 
 	private static final String TAG = "NE2";
+	private static final String FRAGMENT_TAG = "ne_list";
+	private PlaceholderFragment placeholderFragment;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		IntentFilter mSaveIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ACTION);
 		
+		
+		IntentFilter mSaveIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ACTION);
+		IntentFilter mErrorIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ERROR);
+		IntentFilter mFillListIntentFilter = new IntentFilter(FillNewEpisodeListService.Constants.BROADCAST_FILL_LIST);
 		if (savedInstanceState == null) {
+			placeholderFragment = new PlaceholderFragment();
 			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+					.add(R.id.container, placeholderFragment,FRAGMENT_TAG).commit();
 		}
 		SaveReceiver mSaveReceiver = new SaveReceiver();
 		LocalBroadcastManager.getInstance(this).registerReceiver(mSaveReceiver, mSaveIntentFilter);
+		ErrorReceiver mErrorReceiver = new ErrorReceiver();
+		LocalBroadcastManager.getInstance(this).registerReceiver(mErrorReceiver, mErrorIntentFilter);
 		
+		FillListReceiver mFillListReceiver = new FillListReceiver();
+		LocalBroadcastManager.getInstance(this).registerReceiver(mFillListReceiver, mFillListIntentFilter);
+		Intent fillListService = new Intent(this,FillNewEpisodeListService.class);
+		startService(fillListService);
 	}
 
 	@Override
@@ -99,7 +112,8 @@ public class MainActivity extends Activity {
 			View rootView = inflater.inflate(R.layout.fragment_main, container,
 					false);
 			gvNuevosEpisodios = (GridView)rootView.findViewById(R.id.gvNuevosEpisodios);
-			fillList(20);
+			//fillList(20);
+			gvNuevosEpisodios.setEmptyView(rootView.findViewById(R.id.emptyNew));
 			adapter = new NewEpisodeAdapter(getActivity(), eList);
 			gvNuevosEpisodios.setAdapter(adapter);
 			
@@ -121,6 +135,15 @@ public class MainActivity extends Activity {
 				eList.add(episode);
 			}
 		}
+		
+		public void updateList(ArrayList<Episode> list)
+		{
+			Log.d(TAG, "updateList");
+			if(eList.isEmpty())
+			{
+				eList.addAll(list);
+			}
+		}
 	}
 
 	private class SaveReceiver extends BroadcastReceiver
@@ -135,6 +158,52 @@ public class MainActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			Log.d(TAG, "actualiza grid");
+			Toast.makeText(getApplicationContext(),
+					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS),
+					Toast.LENGTH_SHORT).show();
+		}
+		
+	}
+	
+	private class ErrorReceiver extends BroadcastReceiver
+	{
+		
+
+		public ErrorReceiver() {
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			Log.d(TAG, "error al guardar");
+			Toast.makeText(getApplicationContext(),
+					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR),
+					Toast.LENGTH_SHORT).show();
+		}
+		
+	}
+	
+	private class FillListReceiver extends BroadcastReceiver
+	{
+		public FillListReceiver() {
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			Log.d(TAG, "fill_list");
+			if(placeholderFragment.isVisible())
+			{
+				Log.d(TAG,"fragment visible");
+				placeholderFragment.updateList(intent.getParcelableArrayListExtra(FillNewEpisodeListService.Constants.EXTENDED_DATA_FILL_LIST));
+			}
+				
+			//eList = intent.getParcelableArrayListExtra(FillNewEpisodeListService.Constants.EXTENDED_DATA_FILL_LIST);
+			/*Toast.makeText(getApplicationContext(),
+					intent.getStringExtra(FillNewEpisodeListService.Constants.EXTENDED_DATA_FILL_LIST),
+					Toast.LENGTH_SHORT).show();*/
 		}
 		
 	}

@@ -2,10 +2,13 @@ package com.ninetoseven.series.activitys;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
@@ -49,12 +53,19 @@ public class ShowDescriptionActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		handleIntent(getIntent());
+		IntentFilter mSaveIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ACTION);
+		IntentFilter mErrorIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ERROR);
 		if (savedInstanceState == null) {
 			PlaceholderFragment placeHolderFragment = new PlaceholderFragment();
 			placeHolderFragment.setArguments(args);
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, placeHolderFragment).commit();
 		}
+		ErrorReceiver mErrorReceiver = new ErrorReceiver();
+		LocalBroadcastManager.getInstance(this).registerReceiver(mErrorReceiver, mErrorIntentFilter);
+		
+		SaveReceiver mSaveReceiver = new SaveReceiver();
+		LocalBroadcastManager.getInstance(this).registerReceiver(mSaveReceiver, mSaveIntentFilter);
 	}
 	
 	 private void handleIntent(Intent intent) {
@@ -213,19 +224,27 @@ public class ShowDescriptionActivity extends Activity {
 						 Episode[] arrayE= new EpisodeInfoParser(response).parse();
 						show.setLatestepisode(arrayE[0]);//la posicion cero tiene el ultimo episodio
 						show.setNextepisode(arrayE[1]);//la posicion 1 tiene el siguiente episodio
-						 if(arrayE.length==2)
+						// if(arrayE[0]!=null)
 						{
-							Log.d(TAG, "next episode: "+show.getNextepisode().getTitle());
-							Intent saveShowService = new Intent(getActivity(),SaveShowService.class);
-							//saveShowService.setData(Uri.parse("data"));
-							saveShowService.putExtra("show", show);
-							getActivity().startService(saveShowService);
+							
+							//if(arrayE[1]!=null)
+							{
+								//Log.d(TAG, "next episode: "+show.getNextepisode().getTitle());
+								Intent saveShowService = new Intent(getActivity(),SaveShowService.class);
+								//saveShowService.setData(Uri.parse("data"));
+								saveShowService.putExtra("show", show);
+								getActivity().startService(saveShowService);
+							}
+							//else
+							{
+								//Log.e(TAG, "error no hay next episode");
+							}
 							
 						}
-						else
+						//else
 						{
 							//hubo un probblema al leer el show
-							Log.e(TAG, "error no hay recientes");
+							//Log.e(TAG, "error no hay latest episode");
 						}
 					}
 					else
@@ -246,6 +265,43 @@ public class ShowDescriptionActivity extends Activity {
 			queue.add(request);
 		}
 		
+		
+	}
+	
+	private class ErrorReceiver extends BroadcastReceiver
+	{
+		
+
+		public ErrorReceiver() {
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			Log.d(TAG, "error al guardar");
+			Toast.makeText(getApplicationContext(),
+					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR),
+					Toast.LENGTH_SHORT).show();
+		}
+		
+	}
+	
+	private class SaveReceiver extends BroadcastReceiver
+	{
+		
+
+		public SaveReceiver() {
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			Toast.makeText(getApplicationContext(),
+					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS),
+					Toast.LENGTH_SHORT).show();
+		}
 		
 	}
 }

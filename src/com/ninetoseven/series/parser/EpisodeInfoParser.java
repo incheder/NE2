@@ -35,7 +35,7 @@ public class EpisodeInfoParser {
  
     public Episode[] parse ()
     {
-    	arrayE = new Episode[2];
+    	
         RootElement root = new RootElement("show");
         Element latestepisode = root.getChild("latestepisode");
         Element nextepisode = root.getChild("nextepisode");
@@ -45,6 +45,12 @@ public class EpisodeInfoParser {
                 show = new Show();
             }
         });*/
+        
+        root.setStartElementListener(new StartElementListener() {
+            public void start(Attributes attrs) {
+            	arrayE = new Episode[2];
+            }
+        });
         
         latestepisode.setStartElementListener(new StartElementListener() {
             public void start(Attributes attrs) {

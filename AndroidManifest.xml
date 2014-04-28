@@ -20,6 +20,9 @@
           <service
             android:name="com.ninetoseven.series.util.SaveShowService"
             android:exported="false"/>
+           <service
+            android:name="com.ninetoseven.series.util.FillNewEpisodeListService"
+            android:exported="false"/>
         <activity
             android:name="com.ninetoseven.series.activitys.MainActivity"
             android:label="@string/app_name" >
