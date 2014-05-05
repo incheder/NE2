@@ -36,6 +36,7 @@ import com.ninetoseven.series.model.Show;
 import com.ninetoseven.series.parser.ShowSearchParser;
 import com.ninetoseven.series.util.MySuggestionProvider;
 import com.ninetoseven.series.util.SaveShowService;
+import com.ninetoseven.series.util.Util;
 import com.ninetoseven.series.util.VolleySingleton;
 
 public class SearchActivity extends Activity{
@@ -134,7 +135,7 @@ public class SearchActivity extends Activity{
 		private SearchResultAdapter adapter;
 		private GridView gvSearch;
 		private ProgressBar pbLoading;
-		private List<Show> sList;
+		private ArrayList<Show> sList;
 		private String query;
 		public PlaceholderFragment() {
 		}
@@ -152,7 +153,7 @@ public class SearchActivity extends Activity{
 		public void onCreate(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
 			super.onCreate(savedInstanceState);
-			sList = new ArrayList<Show>();
+			//sList = new ArrayList<Show>();
 		}
 
 		@Override
@@ -169,7 +170,37 @@ public class SearchActivity extends Activity{
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
-			fillList();
+			if(savedInstanceState==null)
+			{
+				fillList();
+			}
+			else
+			{
+				sList=savedInstanceState.getParcelableArrayList("sList");
+				if(sList!=null)
+				{
+					adapter = new SearchResultAdapter(getActivity(), sList);
+					gvSearch.setAdapter(adapter);
+					pbLoading.setVisibility(View.GONE);
+				}
+				else
+				{
+					fillList();
+				}
+			}
+			
+			
+		}
+		
+		@Override
+		public void onSaveInstanceState(Bundle outState) {
+			// TODO Auto-generated method stub
+			super.onSaveInstanceState(outState);
+		
+			if(sList!=null)
+			{
+				outState.putParcelableArrayList("sList", sList);
+			}
 			
 		}
 		
@@ -196,7 +227,7 @@ public class SearchActivity extends Activity{
 					
 					if(response!=null)
 					{
-						sList= new ShowSearchParser(response).parse();
+						sList= (ArrayList<Show>) new ShowSearchParser(response).parse();
 						if(sList!=null)
 						{
 							pbLoading.setVisibility(View.GONE);
@@ -225,6 +256,7 @@ public class SearchActivity extends Activity{
 					
 				}
 			});
+			request.setRetryPolicy(Util.retryPolicy);
 			queue.add(request);
 			
 		}

@@ -80,6 +80,7 @@ public class SaveShowService extends IntentService {
 				}
 				else
 				{
+					Log.d(TAG, "db image "+show.getImage());
 					ContentValues nextEp = new ContentValues();
 					nextEp.put(NextEntry.COLUMN_NAME_SHOWNAME, show.getShowName());
 					nextEp.put(NextEntry.COLUMN_NAME_SHOW_ID, show.getId());
@@ -87,6 +88,7 @@ public class SaveShowService extends IntentService {
 					nextEp.put(NextEntry.COLUMN_NAME_TITLE, show.getNextepisode().getTitle());
 					nextEp.put(NextEntry.COLUMN_NAME_AIRDATE, show.getNextepisode().getAirdate());
 					nextEp.put(NextEntry.COLUMN_NAME_AIRTIME, show.getNextepisode().getAirtime());
+					nextEp.put(NextEntry.COLUMN_NAME_IMAGE, show.getImage());
 					if(db.insert(NextEntry.TABLE_NAME, null, nextEp)==-1)
 					{
 						//Toast.makeText(getApplicationContext(), R.string.error_insert_ep_db, Toast.LENGTH_SHORT).show();
@@ -107,6 +109,7 @@ public class SaveShowService extends IntentService {
 					lastEp.put(LastEntry.COLUMN_NAME_TITLE, show.getLatestepisode().getTitle());
 					lastEp.put(LastEntry.COLUMN_NAME_AIRDATE, show.getLatestepisode().getAirdate());
 					lastEp.put(LastEntry.COLUMN_NAME_AIRTIME, show.getLatestepisode().getAirtime());
+					lastEp.put(LastEntry.COLUMN_NAME_IMAGE, show.getImage());
 					if(db.insert(LastEntry.TABLE_NAME, null, lastEp)==-1)
 					{
 						//Toast.makeText(getApplicationContext(), R.string.error_insert_ep_db, Toast.LENGTH_SHORT).show();

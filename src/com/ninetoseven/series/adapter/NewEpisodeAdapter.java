@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +12,20 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.ninetoseven.series.R;
 import com.ninetoseven.series.model.Episode;
+import com.ninetoseven.series.util.VolleySingleton;
 
 public class NewEpisodeAdapter extends BaseAdapter {
 
+	private static final String TAG = "NE2";
 	private Context context;
 	private List<Episode> eList;
 	Random r = new Random();
 	static class ViewHolder {
-		ImageView ivShow;
+		NetworkImageView ivShow;
 		TextView tvShowName;
 		TextView tvEpisode;
 		TextView tvEpisodeName;
@@ -62,7 +67,7 @@ public class NewEpisodeAdapter extends BaseAdapter {
 					parent, false);
 
 			holder = new ViewHolder();
-			holder.ivShow = (ImageView) convertView
+			holder.ivShow = (NetworkImageView) convertView
 					.findViewById(R.id.ivItemShow);
 			holder.tvShowName = (TextView) convertView
 					.findViewById(R.id.tvItemShowName);
@@ -83,8 +88,11 @@ public class NewEpisodeAdapter extends BaseAdapter {
 												// que reuse el view
 		// Util.imageLoader.displayImage("file:///"+Util.getColumna("cache",
 		// context, lista.get(position).getId(),"Podcast"), holder.ivPod);
+		Log.d(TAG, "image: "+eList.get(position).getImage());
+		ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
+		holder.ivShow.setImageUrl(eList.get(position).getImage(), imageLoader);
 	
-		if(r.nextInt(2)==1)
+	/*	if(r.nextInt(2)==1)
 		{
 			holder.ivShow.setImageResource(R.drawable.show);
 		}
@@ -92,7 +100,7 @@ public class NewEpisodeAdapter extends BaseAdapter {
 		{
 			holder.ivShow.setImageResource(R.drawable.show2);
 		}
-		
+		*/
 		holder.tvShowName.setText(eList.get(position).getShowName());
 		holder.tvEpisode.setText(eList.get(position).getNumber());
 		holder.tvEpisodeName.setText(eList.get(position).getTitle());

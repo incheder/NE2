@@ -54,7 +54,8 @@ public class FillNewEpisodeListService extends IntentService {
 					"number",
 					"title",
 					"airdate",
-					"airtime"
+					"airtime",
+					"image"
 					
 				};
 			
@@ -82,6 +83,7 @@ public class FillNewEpisodeListService extends IntentService {
 						episode.setTitle(n.getString(3));
 						episode.setAirdate(n.getString(4));
 						episode.setAirtime(n.getString(5));
+						episode.setImage(n.getString(6));
 						eList.add(episode);
 					}
 					else//si no encontro un nuevo episodio de este id
@@ -91,11 +93,12 @@ public class FillNewEpisodeListService extends IntentService {
 						if(u.moveToFirst())
 						{
 							Episode episode = new Episode();
-							episode.setShowName(n.getString(1));
-							episode.setNumber(n.getString(2));
-							episode.setTitle(n.getString(3));
-							episode.setAirdate(n.getString(4));
-							episode.setAirtime(n.getString(5));
+							episode.setShowName(u.getString(1));
+							episode.setNumber(u.getString(2));
+							episode.setTitle(u.getString(3));
+							episode.setAirdate(u.getString(4));
+							episode.setAirtime(u.getString(5));
+							episode.setImage(u.getString(6));
 							eList.add(episode);
 						}
 						else//tampoco encontro un ultimo episodio

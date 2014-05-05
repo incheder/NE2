@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -34,10 +35,12 @@ import com.ninetoseven.series.model.Show;
 import com.ninetoseven.series.parser.EpisodeInfoParser;
 import com.ninetoseven.series.parser.ShowInfoParser;
 import com.ninetoseven.series.util.SaveShowService;
+import com.ninetoseven.series.util.Util;
 import com.ninetoseven.series.util.VolleySingleton;
 
 public class ShowDescriptionActivity extends Activity {
 	private static final String TAG = "NE2";
+	public static final int TIMEOUT = 60000;
 	Bundle args = new Bundle();
 	
 	
@@ -138,7 +141,35 @@ public class ShowDescriptionActivity extends Activity {
 			// TODO Auto-generated method stub
 			super.onActivityCreated(savedInstanceState);
 			queue = VolleySingleton.getInstance(getActivity()).getRequestQueue();
-			readShow(url);
+			if(savedInstanceState==null)
+			{
+				readShow(url);
+			}
+			else
+			{
+				show=savedInstanceState.getParcelable("show");
+				if(show!=null)
+				{
+					fillShowViews(show);
+				}
+				else
+				{
+					readShow(url);
+				}
+				
+			}
+			
+			
+		}
+		
+		@Override
+		public void onSaveInstanceState(Bundle outState) {
+			// TODO Auto-generated method stub
+			super.onSaveInstanceState(outState);
+			if(show!=null)
+			{
+				outState.putParcelable("show", show);
+			}
 			
 		}
 		
@@ -203,10 +234,11 @@ public class ShowDescriptionActivity extends Activity {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 				//manjemos el error
-					Log.e(TAG, "error: "+error.getMessage());
+					Log.e(TAG, "error volley: "+error.getMessage());
 					
 				}
 			});
+			request.setRetryPolicy(Util.retryPolicy);
 			queue.add(request);
 		}
 		
@@ -262,6 +294,7 @@ public class ShowDescriptionActivity extends Activity {
 					
 				}
 			});
+			request.setRetryPolicy(Util.retryPolicy);
 			queue.add(request);
 		}
 		

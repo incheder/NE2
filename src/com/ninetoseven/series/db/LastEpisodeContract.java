@@ -17,6 +17,7 @@ public final class LastEpisodeContract {
 		public static final String COLUMN_NAME_TITLE = "title";
 		public static final String COLUMN_NAME_AIRDATE = "airdate";
 		public static final String COLUMN_NAME_AIRTIME = "airtime";
+		public static final String COLUMN_NAME_IMAGE = "image";
 		
 	}
 

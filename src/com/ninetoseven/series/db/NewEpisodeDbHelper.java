@@ -36,6 +36,7 @@ public class NewEpisodeDbHelper extends SQLiteOpenHelper{
 			NextEntry.COLUMN_NAME_NUMBER + TEXT_TYPE + COMA_SEP+
 			NextEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMA_SEP+
 			NextEntry.COLUMN_NAME_AIRDATE + TEXT_TYPE + COMA_SEP+
+			NextEntry.COLUMN_NAME_IMAGE + TEXT_TYPE + COMA_SEP+
 			NextEntry.COLUMN_NAME_AIRTIME + TEXT_TYPE +" );";
 	
 	private static final String SQL_CREATE_LAST_EPISODE = "CREATE TABLE "+LastEntry.TABLE_NAME+" ("+LastEntry._ID+" INTEGER PRIMARY KEY,"+
@@ -44,6 +45,7 @@ public class NewEpisodeDbHelper extends SQLiteOpenHelper{
 			LastEntry.COLUMN_NAME_NUMBER + TEXT_TYPE + COMA_SEP+
 			LastEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMA_SEP+
 			LastEntry.COLUMN_NAME_AIRDATE + TEXT_TYPE + COMA_SEP+
+			LastEntry.COLUMN_NAME_IMAGE + TEXT_TYPE + COMA_SEP+
 			LastEntry.COLUMN_NAME_AIRTIME + TEXT_TYPE +" );";
 	
 	private static final String SQL_DELETE_SHOW =

@@ -9,6 +9,7 @@ public class Episode implements Parcelable{
 	private String title;
 	private String airdate;
 	private String airtime;
+	private String image;
 
 	public Episode() {
 		// TODO Auto-generated constructor stub
@@ -68,6 +69,7 @@ public class Episode implements Parcelable{
 		dest.writeString(title);
 		dest.writeString(airdate);
 		dest.writeString(airtime);
+		dest.writeString(image);
 	}
 	
 	public Episode(Parcel in) {
@@ -76,8 +78,17 @@ public class Episode implements Parcelable{
 		title= in.readString();
 		airdate= in.readString();
 		airtime= in.readString();
+		image= in.readString();
 	}
 	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	// this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
     public static final Parcelable.Creator<Episode> CREATOR = new Parcelable.Creator<Episode>() {
         public Episode createFromParcel(Parcel in) {

@@ -37,16 +37,20 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.i(TAG, "activity onCreate");
 		setContentView(R.layout.activity_main);
 		
 		
 		IntentFilter mSaveIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ACTION);
 		IntentFilter mErrorIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ERROR);
 		IntentFilter mFillListIntentFilter = new IntentFilter(FillNewEpisodeListService.Constants.BROADCAST_FILL_LIST);
+		placeholderFragment = new PlaceholderFragment();
 		if (savedInstanceState == null) {
-			placeholderFragment = new PlaceholderFragment();
+			
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, placeholderFragment,FRAGMENT_TAG).commit();
+			Intent fillListService = new Intent(this,FillNewEpisodeListService.class);
+			startService(fillListService);
 		}
 		SaveReceiver mSaveReceiver = new SaveReceiver();
 		LocalBroadcastManager.getInstance(this).registerReceiver(mSaveReceiver, mSaveIntentFilter);
@@ -55,10 +59,16 @@ public class MainActivity extends Activity {
 		
 		FillListReceiver mFillListReceiver = new FillListReceiver();
 		LocalBroadcastManager.getInstance(this).registerReceiver(mFillListReceiver, mFillListIntentFilter);
-		Intent fillListService = new Intent(this,FillNewEpisodeListService.class);
-		startService(fillListService);
+		
 	}
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.i(TAG, "activity onResume");
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -95,15 +105,23 @@ public class MainActivity extends Activity {
 		
 		private NewEpisodeAdapter adapter;
 		private GridView gvNuevosEpisodios;
-		private List<Episode> eList;
+		private ArrayList<Episode> eList;
 		public PlaceholderFragment() {
 		}
 		
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
-			// TODO Auto-generated method stub
+			Log.i(TAG, "fragment onCreate");
 			super.onCreate(savedInstanceState);
-			eList = new ArrayList<Episode>();
+			if(savedInstanceState==null)
+			{
+				eList = new ArrayList<Episode>();
+			}
+			else
+			{
+				eList = savedInstanceState.getParcelableArrayList("eList");
+			}
+			
 		}
 
 		@Override
@@ -120,9 +138,22 @@ public class MainActivity extends Activity {
 			return rootView;
 		}
 		
+		@Override
+		public void onResume() {
+			Log.i(TAG, "fragment onResume");
+			super.onResume();
+		}
+		
+		@Override
+		public void onSaveInstanceState(Bundle outState) {
+			// TODO Auto-generated method stub
+			super.onSaveInstanceState(outState);
+			outState.putParcelableArrayList("eList", eList);
+		}
 		
 		
-		private void fillList(int num)
+		
+		/*private void fillList(int num)
 		{
 			Episode episode= null;
 			for (int i = 0; i < num; i++) {
@@ -134,14 +165,17 @@ public class MainActivity extends Activity {
 				episode.setAirtime("Thursday at 10:00 pm");
 				eList.add(episode);
 			}
-		}
+		}*/
 		
 		public void updateList(ArrayList<Episode> list)
 		{
 			Log.d(TAG, "updateList");
-			if(eList.isEmpty())
+			
+			//if(eList.isEmpty())
 			{
+				eList.clear();
 				eList.addAll(list);
+				adapter.notifyDataSetChanged();
 			}
 		}
 	}
@@ -161,6 +195,9 @@ public class MainActivity extends Activity {
 			Toast.makeText(getApplicationContext(),
 					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS),
 					Toast.LENGTH_SHORT).show();
+			Intent fillListService = new Intent(getApplicationContext(),FillNewEpisodeListService.class);
+			startService(fillListService);
+			
 		}
 		
 	}
@@ -197,7 +234,8 @@ public class MainActivity extends Activity {
 			if(placeholderFragment.isVisible())
 			{
 				Log.d(TAG,"fragment visible");
-				placeholderFragment.updateList(intent.getParcelableArrayListExtra(FillNewEpisodeListService.Constants.EXTENDED_DATA_FILL_LIST));
+				ArrayList<Episode> eList = intent.getParcelableArrayListExtra(FillNewEpisodeListService.Constants.EXTENDED_DATA_FILL_LIST);
+				placeholderFragment.updateList(eList);
 			}
 				
 			//eList = intent.getParcelableArrayListExtra(FillNewEpisodeListService.Constants.EXTENDED_DATA_FILL_LIST);
