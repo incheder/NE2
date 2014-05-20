@@ -256,28 +256,14 @@ public class ShowDescriptionActivity extends Activity {
 						 Episode[] arrayE= new EpisodeInfoParser(response).parse();
 						show.setLatestepisode(arrayE[0]);//la posicion cero tiene el ultimo episodio
 						show.setNextepisode(arrayE[1]);//la posicion 1 tiene el siguiente episodio
-						// if(arrayE[0]!=null)
-						{
-							
-							//if(arrayE[1]!=null)
-							{
+						
 								//Log.d(TAG, "next episode: "+show.getNextepisode().getTitle());
 								Intent saveShowService = new Intent(getActivity(),SaveShowService.class);
 								//saveShowService.setData(Uri.parse("data"));
 								saveShowService.putExtra("show", show);
 								getActivity().startService(saveShowService);
-							}
-							//else
-							{
-								//Log.e(TAG, "error no hay next episode");
-							}
-							
-						}
-						//else
-						{
-							//hubo un probblema al leer el show
-							//Log.e(TAG, "error no hay latest episode");
-						}
+						
+					
 					}
 					else
 					{

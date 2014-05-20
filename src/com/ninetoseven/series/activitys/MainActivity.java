@@ -11,6 +11,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -24,6 +28,10 @@ import android.widget.Toast;
 
 import com.ninetoseven.series.R;
 import com.ninetoseven.series.adapter.NewEpisodeAdapter;
+import com.ninetoseven.series.db.LastEpisodeContract.LastEntry;
+import com.ninetoseven.series.db.NewEpisodeDbHelper;
+import com.ninetoseven.series.db.NextEpisodeContract.NextEntry;
+import com.ninetoseven.series.db.ShowContract.ShowEntry;
 import com.ninetoseven.series.model.Episode;
 import com.ninetoseven.series.util.FillNewEpisodeListService;
 import com.ninetoseven.series.util.SaveShowService;
@@ -34,6 +42,7 @@ public class MainActivity extends Activity {
 	private static final String FRAGMENT_TAG = "ne_list";
 	private PlaceholderFragment placeholderFragment;
 	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,22 +52,21 @@ public class MainActivity extends Activity {
 		
 		IntentFilter mSaveIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ACTION);
 		IntentFilter mErrorIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ERROR);
-		IntentFilter mFillListIntentFilter = new IntentFilter(FillNewEpisodeListService.Constants.BROADCAST_FILL_LIST);
+		//IntentFilter mFillListIntentFilter = new IntentFilter(FillNewEpisodeListService.Constants.BROADCAST_FILL_LIST);
 		placeholderFragment = new PlaceholderFragment();
 		if (savedInstanceState == null) {
 			
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, placeholderFragment,FRAGMENT_TAG).commit();
-			Intent fillListService = new Intent(this,FillNewEpisodeListService.class);
-			startService(fillListService);
+			
 		}
 		SaveReceiver mSaveReceiver = new SaveReceiver();
 		LocalBroadcastManager.getInstance(this).registerReceiver(mSaveReceiver, mSaveIntentFilter);
 		ErrorReceiver mErrorReceiver = new ErrorReceiver();
 		LocalBroadcastManager.getInstance(this).registerReceiver(mErrorReceiver, mErrorIntentFilter);
 		
-		FillListReceiver mFillListReceiver = new FillListReceiver();
-		LocalBroadcastManager.getInstance(this).registerReceiver(mFillListReceiver, mFillListIntentFilter);
+		//FillListReceiver mFillListReceiver = new FillListReceiver();
+		//LocalBroadcastManager.getInstance(this).registerReceiver(mFillListReceiver, mFillListIntentFilter);
 		
 	}
 
@@ -67,6 +75,9 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		Log.i(TAG, "activity onResume");
+	//	Intent fillListService = new Intent(this,FillNewEpisodeListService.class);
+		//startService(fillListService);
+		
 	}
 	
 	@Override
@@ -106,6 +117,8 @@ public class MainActivity extends Activity {
 		private NewEpisodeAdapter adapter;
 		private GridView gvNuevosEpisodios;
 		private ArrayList<Episode> eList;
+		private static boolean actualiza;
+		
 		public PlaceholderFragment() {
 		}
 		
@@ -113,14 +126,7 @@ public class MainActivity extends Activity {
 		public void onCreate(Bundle savedInstanceState) {
 			Log.i(TAG, "fragment onCreate");
 			super.onCreate(savedInstanceState);
-			if(savedInstanceState==null)
-			{
-				eList = new ArrayList<Episode>();
-			}
-			else
-			{
-				eList = savedInstanceState.getParcelableArrayList("eList");
-			}
+			
 			
 		}
 
@@ -132,9 +138,19 @@ public class MainActivity extends Activity {
 			gvNuevosEpisodios = (GridView)rootView.findViewById(R.id.gvNuevosEpisodios);
 			//fillList(20);
 			gvNuevosEpisodios.setEmptyView(rootView.findViewById(R.id.emptyNew));
-			adapter = new NewEpisodeAdapter(getActivity(), eList);
-			gvNuevosEpisodios.setAdapter(adapter);
 			
+			if(savedInstanceState==null)
+			{
+				eList = new ArrayList<Episode>();
+				setActualiza(true);
+			}
+			else
+			{
+				
+				eList = savedInstanceState.getParcelableArrayList("eList");
+				adapter = new NewEpisodeAdapter(getActivity(), eList);
+				gvNuevosEpisodios.setAdapter(adapter);
+			}
 			return rootView;
 		}
 		
@@ -142,6 +158,12 @@ public class MainActivity extends Activity {
 		public void onResume() {
 			Log.i(TAG, "fragment onResume");
 			super.onResume();
+			if(actualiza)
+			{
+				new FillListTask(getActivity()).execute();
+				setActualiza(false);
+			}
+			
 		}
 		
 		@Override
@@ -149,6 +171,7 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated method stub
 			super.onSaveInstanceState(outState);
 			outState.putParcelableArrayList("eList", eList);
+			Log.d(TAG, "lista size: "+eList.size());
 		}
 		
 		
@@ -167,7 +190,7 @@ public class MainActivity extends Activity {
 			}
 		}*/
 		
-		public void updateList(ArrayList<Episode> list)
+		/*public void updateList(ArrayList<Episode> list)
 		{
 			Log.d(TAG, "updateList");
 			
@@ -177,7 +200,144 @@ public class MainActivity extends Activity {
 				eList.addAll(list);
 				adapter.notifyDataSetChanged();
 			}
+		}*/
+		
+		public boolean isActualiza() {
+			return actualiza;
 		}
+
+		public void setActualiza(boolean actualiza) {
+			this.actualiza = actualiza;
+		}
+
+
+
+		public class FillListTask extends AsyncTask<Void, Void, List<Episode>>{
+			
+			Context context;
+			
+			private static final String TAG = "NE2";
+			
+			public FillListTask(Context context) {
+			this.context=context;
+			}
+			
+			@Override
+			protected List<Episode> doInBackground(Void... params) {
+				NewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(context);
+				try
+				{
+					List<Episode>episodeList = new ArrayList<Episode>();
+					SQLiteDatabase db = neDbHelper.getReadableDatabase();
+					String[] projection={
+							"showid",
+							
+						};
+					
+					String[] projectionEpisode={
+							"showid",
+							"showname",
+							"number",
+							"title",
+							"airdate",
+							"airtime",
+							"image"
+							
+						};
+					
+					Cursor c = db.query(ShowEntry.TABLE_NAME, projection, null, null, null, null, null);
+					if(c.moveToFirst())
+					{
+						List<String> idList = new ArrayList<String>();
+						do
+						{
+							idList.add(c.getString(0));
+						}
+						while(c.moveToNext()); 
+						
+						
+						for (int i = 0; i < idList.size(); i++)
+						{
+							String selection="showid='"+idList.get(i)+"'";
+							
+							Cursor n = db.query(NextEntry.TABLE_NAME, projectionEpisode, selection, null, null, null, null);
+							if(n.moveToFirst())
+							{
+								Episode episode = new Episode();
+								episode.setShowName(n.getString(1));
+								episode.setNumber(n.getString(2));
+								episode.setTitle(n.getString(3));
+								episode.setAirdate(n.getString(4));
+								episode.setAirtime(n.getString(5));
+								episode.setImage(n.getString(6));
+								episodeList.add(episode);
+							}
+							else//si no encontro un nuevo episodio de este id
+							{
+								//intentamos buscar su ultimo episodio
+								Cursor u = db.query(LastEntry.TABLE_NAME, projectionEpisode, selection, null, null, null, null);
+								if(u.moveToFirst())
+								{
+									Episode episode = new Episode();
+									episode.setShowName(u.getString(1));
+									episode.setNumber(u.getString(2));
+									episode.setTitle(u.getString(3));
+									episode.setAirdate(u.getString(4));
+									episode.setAirtime(u.getString(5));
+									episode.setImage(u.getString(6));
+									episodeList.add(episode);
+								}
+								else//tampoco encontro un ultimo episodio
+								{
+									Log.e(TAG, "no hay eisodio nuevo ni ultimo del id: "+idList.get(i));
+									
+								}
+							}
+						}
+						//tenemos eList con los nuevos episodios, ahora hay que mandarlo a la actividad
+					
+					}
+					else
+					{
+						//no hay shows en la bd
+						Log.e(TAG, "no hay shows en la bd");
+					}
+					
+				
+					if(db.isOpen())
+					{
+						db.close();
+					}
+				
+					return episodeList;
+					
+					 
+					 
+				}catch(SQLiteException e)
+				{
+					Log.e(TAG, "error: "+e.getMessage());
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(List<Episode> result) {
+				super.onPostExecute(result);
+				if(result!=null)
+				{
+					eList=(ArrayList<Episode>) result;
+					adapter = new NewEpisodeAdapter(getActivity(), eList);
+					
+					gvNuevosEpisodios.setAdapter(adapter);
+				}
+				
+				
+			}
+		}
+		
+		
+		
+		
 	}
 
 	private class SaveReceiver extends BroadcastReceiver
@@ -195,8 +355,11 @@ public class MainActivity extends Activity {
 			Toast.makeText(getApplicationContext(),
 					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS),
 					Toast.LENGTH_SHORT).show();
-			Intent fillListService = new Intent(getApplicationContext(),FillNewEpisodeListService.class);
-			startService(fillListService);
+			placeholderFragment.setActualiza(true);
+			
+			//aqui hay que asignar un bandera ara indidicar si en onresume se debe actualizar
+			//Intent fillListService = new Intent(getApplicationContext(),FillNewEpisodeListService.class);//esto deberia ir en onresume
+			//startService(fillListService);
 			
 		}
 		
@@ -221,8 +384,10 @@ public class MainActivity extends Activity {
 		
 	}
 	
-	private class FillListReceiver extends BroadcastReceiver
+	/*private class FillListReceiver extends BroadcastReceiver
 	{
+		
+
 		public FillListReceiver() {
 			// TODO Auto-generated constructor stub
 		}
@@ -231,18 +396,15 @@ public class MainActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			Log.d(TAG, "fill_list");
-			if(placeholderFragment.isVisible())
+			//if(placeholderFragment.isVisible())
 			{
 				Log.d(TAG,"fragment visible");
 				ArrayList<Episode> eList = intent.getParcelableArrayListExtra(FillNewEpisodeListService.Constants.EXTENDED_DATA_FILL_LIST);
-				placeholderFragment.updateList(eList);
+				//placeholderFragment.updateList(eList);
 			}
-				
-			//eList = intent.getParcelableArrayListExtra(FillNewEpisodeListService.Constants.EXTENDED_DATA_FILL_LIST);
-			/*Toast.makeText(getApplicationContext(),
-					intent.getStringExtra(FillNewEpisodeListService.Constants.EXTENDED_DATA_FILL_LIST),
-					Toast.LENGTH_SHORT).show();*/
+			
+			
 		}
 		
-	}
+	}*/
 }

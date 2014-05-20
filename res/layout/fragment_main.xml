@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:numColumns="@integer/grid_rows" >
+        android:numColumns="auto_fit" >
     </GridView>
 
     <TextView

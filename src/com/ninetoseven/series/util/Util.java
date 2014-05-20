@@ -17,7 +17,7 @@ import com.android.volley.DefaultRetryPolicy;
 
 public class Util {
 	
-	private static int TIMEOUT = 30000;
+	private static int TIMEOUT = 60000;
 	private static final String TAG = "NE2";
 	private static final int NUMBER_TRYS = 3;
 	public static DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(TIMEOUT,NUMBER_TRYS,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
