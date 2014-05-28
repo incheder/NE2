@@ -22,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -33,7 +35,6 @@ import com.ninetoseven.series.db.NewEpisodeDbHelper;
 import com.ninetoseven.series.db.NextEpisodeContract.NextEntry;
 import com.ninetoseven.series.db.ShowContract.ShowEntry;
 import com.ninetoseven.series.model.Episode;
-import com.ninetoseven.series.util.FillNewEpisodeListService;
 import com.ninetoseven.series.util.SaveShowService;
 
 public class MainActivity extends Activity {
@@ -111,7 +112,7 @@ public class MainActivity extends Activity {
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment {
+	public static class PlaceholderFragment extends Fragment implements OnItemClickListener {
 
 		
 		private NewEpisodeAdapter adapter;
@@ -138,7 +139,7 @@ public class MainActivity extends Activity {
 			gvNuevosEpisodios = (GridView)rootView.findViewById(R.id.gvNuevosEpisodios);
 			//fillList(20);
 			gvNuevosEpisodios.setEmptyView(rootView.findViewById(R.id.emptyNew));
-			
+			gvNuevosEpisodios.setOnItemClickListener(this);
 			if(savedInstanceState==null)
 			{
 				eList = new ArrayList<Episode>();
@@ -264,6 +265,7 @@ public class MainActivity extends Activity {
 							if(n.moveToFirst())
 							{
 								Episode episode = new Episode();
+								episode.setShowId(n.getString(0));
 								episode.setShowName(n.getString(1));
 								episode.setNumber(n.getString(2));
 								episode.setTitle(n.getString(3));
@@ -279,6 +281,7 @@ public class MainActivity extends Activity {
 								if(u.moveToFirst())
 								{
 									Episode episode = new Episode();
+									episode.setShowId(u.getString(0));
 									episode.setShowName(u.getString(1));
 									episode.setNumber(u.getString(2));
 									episode.setTitle(u.getString(3));
@@ -333,6 +336,18 @@ public class MainActivity extends Activity {
 				
 				
 			}
+		}
+
+
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			String showId = ((Episode)parent.getItemAtPosition(position)).getShowId();
+			Log.d(TAG, "showId: "+showId);
+			Intent intent = new Intent(getActivity(),EpisodeListActivity.class);
+			intent.putExtra("showid", showId);
+			startActivity(intent);
 		}
 		
 		

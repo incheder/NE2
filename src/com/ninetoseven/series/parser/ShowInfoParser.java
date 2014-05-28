@@ -1,10 +1,5 @@
 package com.ninetoseven.series.parser;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.xml.sax.Attributes;
 
 import android.sax.EndTextElementListener;
