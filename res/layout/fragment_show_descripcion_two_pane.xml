@@ -4,14 +4,14 @@
     android:layout_height="match_parent" >
 
     <ProgressBar
-        android:id="@+id/pbLoadingShow"
+        android:id="@+id/pbLoadingEpisode"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
     <LinearLayout
-        android:id="@+id/llShowInfo"
+        android:id="@+id/llEpisodeInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:baselineAligned="false"

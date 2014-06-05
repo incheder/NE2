@@ -120,7 +120,7 @@ public class ShowDescriptionActivity extends Activity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.show, container,
 					false);
-			llShowInfo = (LinearLayout)rootView.findViewById(R.id.llShowInfo);
+			llShowInfo = (LinearLayout)rootView.findViewById(R.id.llEpisodeInfo);
 			llShowInfo.setVisibility(View.GONE);
 			ivShow = (NetworkImageView)rootView.findViewById(R.id.ivShowDescriptionImage);
 			tvDuration = (TextView)rootView.findViewById(R.id.tvDuration);
@@ -130,7 +130,7 @@ public class ShowDescriptionActivity extends Activity {
 			tvStatus = (TextView)rootView.findViewById(R.id.tvStatus);
 			tvSummary = (TextView)rootView.findViewById(R.id.tvSummary);
 			tvTime = (TextView)rootView.findViewById(R.id.tvTime);
-			pbLoading = (ProgressBar)rootView.findViewById(R.id.pbLoadingShow);
+			pbLoading = (ProgressBar)rootView.findViewById(R.id.pbLoadingEpisode);
 			btnSaveShow = (Button)rootView.findViewById(R.id.btnSaveShow);
 			btnSaveShow.setOnClickListener(this);
 			return rootView;

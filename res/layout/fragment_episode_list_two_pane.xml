@@ -3,19 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
      >
-
-    <ProgressBar
-        android:id="@+id/pbLoadingEpisode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-         style="?android:attr/progressBarStyleLarge" />
 	
     <LinearLayout
         android:id="@+id/llEpisodeInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -23,29 +16,13 @@
         android:layout_weight="1" >
 
         <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/ivShowDescriptionImage"
+            android:id="@+id/ivEpisodeDescriptionImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:contentDescription="@string/image_item_content_description"
             android:scaleType="fitXY"
             android:src="@drawable/ic_launcher" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/translucid" >
-
-            <Button
-                android:id="@+id/btnSaveShow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/blue_button"
-                android:text="@string/save"
-                android:textColor="@color/text_save_button" />
-
-        </FrameLayout>
     </FrameLayout>
 
     <LinearLayout
@@ -76,7 +53,7 @@
                         android:textColor="@color/text_label_description" />
 
                     <TextView
-                        android:id="@+id/tvSeason"
+                        android:id="@+id/tvEpisodeListSeason"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margen_columnas"
@@ -94,11 +71,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/margen_columnas"
                         android:layout_weight="1"
-                        android:text="@string/start_date"
+                        android:text="episode"
                         android:textColor="@color/text_label_description" />
 
                     <TextView
-                        android:id="@+id/tvStartDate"
+                        android:id="@+id/tvEpisodeListNumEpisode"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margen_columnas"
@@ -116,11 +93,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/margen_columnas"
                         android:layout_weight="1"
-                        android:text="@string/status"
+                        android:text="airdate"
                         android:textColor="@color/text_label_description" />
 
                     <TextView
-                        android:id="@+id/tvStatus"
+                        android:id="@+id/tvEpisodeListAirdate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margen_columnas"
@@ -138,55 +115,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/margen_columnas"
                         android:layout_weight="1"
-                        android:text="@string/duration"
+                        android:text="title"
                         android:textColor="@color/text_label_description" />
 
                     <TextView
-                        android:id="@+id/tvDuration"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margen_columnas"
-                        android:layout_weight="1"
-                        android:textColor="@color/text_description" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/margen_columnas"
-                        android:layout_weight="1"
-                        android:text="@string/network"
-                        android:textColor="@color/text_label_description" />
-
-                    <TextView
-                        android:id="@+id/tvNetwork"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margen_columnas"
-                        android:layout_weight="1"
-                        android:textColor="@color/text_description" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/margen_columnas"
-                        android:layout_weight="1"
-                        android:text="@string/time"
-                        android:textColor="@color/text_label_description" />
-
-                    <TextView
-                        android:id="@+id/tvTime"
+                        android:id="@+id/tvEpisodeListTitle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margen_columnas"
@@ -201,7 +134,7 @@
                     android:layout_marginTop="@dimen/margen_description" >
 
                     <TextView
-                        android:id="@+id/tvSummary"
+                        android:id="@+id/tvEpisodeListSummary"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_span="2"

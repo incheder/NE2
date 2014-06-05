@@ -2,4 +2,5 @@
 <resources>
    
     <item name="show" type="layout">@layout/fragment_show_descripcion</item>
+     <item name="ep_list" type="layout">@layout/fragment_episode_list</item>
 </resources>

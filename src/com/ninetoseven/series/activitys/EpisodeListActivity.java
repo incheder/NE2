@@ -15,6 +15,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.ninetoseven.series.R;
 import com.ninetoseven.series.model.ListEp;
@@ -83,13 +85,19 @@ public class EpisodeListActivity extends ActionBarActivity{
 	
 	public static  class Content extends android.support.v4.app.Fragment
 	{
-		String name;
+		String season,imageEpisode,title,episode,airdate,summary;
+		 NetworkImageView ivEpisode;
 		
-		static Content newInstance(String name)
+		static Content newInstance(String season,String imageEpisode,String title,String airdate,String summary,String episode)
 		{
 			Content content = new Content();
 			Bundle args = new Bundle();
-			args.putString("name", name);
+			args.putString("season", season);
+			args.putString("imageEpisode", imageEpisode);
+			args.putString("title", title);
+			args.putString("airdate", airdate);
+			args.putString("summary", summary);
+			args.putString("episode", episode);
 			content.setArguments(args);
 			
 			return content;
@@ -100,20 +108,42 @@ public class EpisodeListActivity extends ActionBarActivity{
 			super.onCreate(savedInstanceState);
 			if(getArguments()!=null)
 			{
-				name = getArguments().getString("name");
+				season = getArguments().getString("season");
+				imageEpisode = getArguments().getString("imageEpisode");
+				title = getArguments().getString("title");
+				airdate = getArguments().getString("airdate");
+				summary = getArguments().getString("summary");
+				episode = getArguments().getString("episode");
 			}
 		}
 		
 		 @Override
 	        public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                Bundle savedInstanceState) {
-	            View v = inflater.inflate(R.layout.episode_list_item, container, false);
-	            TextView tvcontenido = (TextView)v.findViewById(R.id.tvContent);
-	            tvcontenido.setText(name);
-	            
+	            View v = inflater.inflate(R.layout.ep_list, container, false);
+	            TextView tvTitle = (TextView)v.findViewById(R.id.tvEpisodeListTitle);
+	            TextView tvSeason = (TextView)v.findViewById(R.id.tvEpisodeListSeason);
+	            TextView tvAirdate = (TextView)v.findViewById(R.id.tvEpisodeListAirdate);
+	            TextView tvSummary = (TextView)v.findViewById(R.id.tvEpisodeListSummary);
+	            TextView tvEpisode = (TextView)v.findViewById(R.id.tvEpisodeListNumEpisode);
+	            ivEpisode = (NetworkImageView)v.findViewById(R.id.ivEpisodeDescriptionImage); 
+	            tvTitle.setText(title);
+	            tvSeason.setText(season);
+	            tvAirdate.setText(airdate);
+	            tvSummary.setText(summary);
+	            tvEpisode.setText(episode);
 	          
 	            return v;
 	        }
+		 
+		 @Override
+		public void onActivityCreated(Bundle savedInstanceState){
+			super.onActivityCreated(savedInstanceState);
+			 ImageLoader imageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
+				
+				ivEpisode.setImageUrl(imageEpisode, imageLoader);
+	            
+		}
 	}
 	
 	public static class MyAdapter extends FragmentStatePagerAdapter
@@ -128,8 +158,13 @@ public class EpisodeListActivity extends ActionBarActivity{
 
 		@Override
 		public android.support.v4.app.Fragment getItem(int position) {
-			Log.d(TAG,"position: "+lista.getListaEpisodios().get(position).getTitle());
-			return Content.newInstance(lista.getListaEpisodios().get(position).getTitle());
+			//Log.d(TAG,"position: "+lista.getListaEpisodios().get(position).getTitle());
+			return Content.newInstance(lista.getListaEpisodios().get(position).getSeason(),
+					lista.getListaEpisodios().get(position).getScreencap(),
+					lista.getListaEpisodios().get(position).getTitle(),
+					lista.getListaEpisodios().get(position).getAirdate(),
+					lista.getListaEpisodios().get(position).getSummary(),
+					lista.getListaEpisodios().get(position).getSeasonnum());
 		}
 
 		@Override

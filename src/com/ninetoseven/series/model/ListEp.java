@@ -54,6 +54,8 @@ public class ListEp {
 		
 		private String screencap;
 		
+		private String season;
+		
 		public String getEpnum() {
 			return epnum;
 		}
@@ -107,6 +109,12 @@ public class ListEp {
 		}
 		public void setScreencap(String screencap) {
 			this.screencap = screencap;
+		}
+		public String getSeason() {
+			return season;
+		}
+		public void setSeason(String season) {
+			this.season = season;
 		}
 		
 		

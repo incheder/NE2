@@ -24,6 +24,7 @@ public class EpisodeListParser {
    // private Item itemActual;
     private ListEp listEp;
     private List<Episode> lista;
+    private String temporada;
     Episode ep;
    // ArrayList<Item> listaItems;
     private final static String TAG="NE2";
@@ -47,6 +48,12 @@ public class EpisodeListParser {
         root.setStartElementListener(new StartElementListener() {
             public void start(Attributes attrs) {
             	 listEp = new ListEp();
+            }
+        });
+        
+        season.setStartElementListener(new StartElementListener() {
+            public void start(Attributes attrs) {
+            	 temporada = attrs.getValue("no");
             }
         });
         
@@ -75,6 +82,7 @@ public class EpisodeListParser {
 			
 			@Override
 			public void end() {
+				ep.setSeason(temporada);
 				lista.add(ep);
 				
 			}
