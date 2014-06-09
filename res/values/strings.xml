@@ -21,4 +21,5 @@
 	<string name="show_saved">Show saved</string>
 	<string name="search_for_shows">Use the search menu to find TV Shows</string>
 	<string name="episode">Episode</string>
+	<string name="reminder">Reminder</string>
 </resources>

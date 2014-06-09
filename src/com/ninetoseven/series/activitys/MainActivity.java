@@ -344,9 +344,16 @@ public class MainActivity extends Activity {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			String showId = ((Episode)parent.getItemAtPosition(position)).getShowId();
-			Log.d(TAG, "showId: "+showId);
+			String image = ((Episode)parent.getItemAtPosition(position)).getImage();
+			String showName = ((Episode)parent.getItemAtPosition(position)).getShowName();
+			String airtime = ((Episode)parent.getItemAtPosition(position)).getAirtime();
 			Intent intent = new Intent(getActivity(),EpisodeListActivity.class);
 			intent.putExtra("showid", showId);
+			intent.putExtra("image", image);
+			intent.putExtra("showName", showName);
+			intent.putExtra("airtime", airtime);
+			
+			
 			startActivity(intent);
 		}
 		

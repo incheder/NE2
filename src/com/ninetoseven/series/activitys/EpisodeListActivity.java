@@ -1,5 +1,8 @@
 package com.ninetoseven.series.activitys;
 
+import java.text.ParseException;
+import java.util.Date;
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -7,8 +10,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -31,17 +37,53 @@ public class EpisodeListActivity extends ActionBarActivity{
 	private MyAdapter adapter;
 	private ViewPager viewPager;
 	private RequestQueue queue;
+	private static String imageShow;
+	private ProgressBar pbLoading;
+	private ListEp lista;
+	private String airtime;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		queue = VolleySingleton.getInstance(this).getRequestQueue();
 		setContentView(R.layout.episode_list_activity);
+		pbLoading = (ProgressBar)findViewById(R.id.pbLoadingList);
 		viewPager = (ViewPager)findViewById(R.id.pager);
 		String id =getIntent().getExtras().getString("showid");
+		imageShow =getIntent().getExtras().getString("image");
+		String showName = getIntent().getExtras().getString("showName");
+		airtime = getIntent().getExtras().getString("airtime");
+		getSupportActionBar().setTitle(showName);
 		readShow(RUTA+id);
 		
 		
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	
+		getMenuInflater().inflate(R.menu.calendar, menu);	
+		return true;
+		
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.calendar) {
+			try {
+				Log.d(TAG, "date:"+ Util.parseDate(airtime));
+				Date date = Util.parseDate("2014-06-09T01:30:00-4:00");
+				long eventId = Util.createCalendarEvent(this, date);
+				Log.d(TAG, "event:"+ eventId);
+				Log.d(TAG, "reminder: "+Util.addReminder(this, eventId));
+				
+			} catch (ParseException e) {
+				Log.e(TAG, e.getMessage());
+			}
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 	
 	private void readShow(String url)
@@ -57,10 +99,11 @@ public class EpisodeListActivity extends ActionBarActivity{
 				if(response!=null)
 				{
 //					Log.d(TAG, "response :"+response);
-					ListEp lista = new EpisodeListParser(response).parse();
+					lista = new EpisodeListParser(response).parse();
 					Log.d(TAG, "lista size :"+lista.getListaEpisodios().size());
 					adapter = new MyAdapter(getSupportFragmentManager(),lista);
 					viewPager.setAdapter(adapter);
+					pbLoading.setVisibility(View.GONE);
 				}
 				else
 				{
@@ -140,8 +183,16 @@ public class EpisodeListActivity extends ActionBarActivity{
 		public void onActivityCreated(Bundle savedInstanceState){
 			super.onActivityCreated(savedInstanceState);
 			 ImageLoader imageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
+				Log.d(TAG, "image: "+imageEpisode);
+				if(imageEpisode!=null)
+				{
+					ivEpisode.setImageUrl(imageEpisode, imageLoader);
+				}
+				else
+				{
+					ivEpisode.setImageUrl(imageShow, imageLoader);
+				}
 				
-				ivEpisode.setImageUrl(imageEpisode, imageLoader);
 	            
 		}
 	}
@@ -174,6 +225,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 		}
 		
 	}
+	
 	
 		
 	

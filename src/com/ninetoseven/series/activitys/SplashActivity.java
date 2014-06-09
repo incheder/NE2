@@ -91,8 +91,11 @@ public class SplashActivity extends Activity{
 				{
 					downloadEpisodes(id);
 				}
-				startActivity(new Intent(getApplicationContext(),MainActivity.class));
+				
 			}
+		
+			startActivity(new Intent(getApplicationContext(),MainActivity.class));
+			SplashActivity.this.finish();
 			
 		}
 		

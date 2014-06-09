@@ -24,6 +24,7 @@ public class EpisodeInfoParser {
     Episode [] arrayE;
    // ArrayList<Item> listaItems;
     private final static String TAG="NE2";
+    private boolean readDate;
  
     public EpisodeInfoParser(String url)
     {
@@ -135,10 +136,29 @@ public class EpisodeInfoParser {
         nextepisode.getChild("airtime").setEndTextElementListener(
                 new EndTextElementListener(){
                     public void end(String body) {
-                        episode.setAirtime(body);
+                    	if(readDate)
+                    	{
+                    		 episode.setAirtime(body);
+                    	}
+                       
                        
                     }
             });
+        nextepisode.getChild("airtime").setStartElementListener(new StartElementListener() {
+			
+			@Override
+			public void start(Attributes attributes) {
+				if(attributes.getValue("format").equals("RFC3339"))
+				{
+					readDate=true;
+				}
+				else
+				{
+					readDate=false;
+				}
+				
+			}
+		});
       
       
         
