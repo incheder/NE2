@@ -72,11 +72,13 @@ public class EpisodeListActivity extends ActionBarActivity{
 		int id = item.getItemId();
 		if (id == R.id.calendar) {
 			try {
-				Log.d(TAG, "date:"+ Util.parseDate(airtime));
-				Date date = Util.parseDate("2014-06-09T01:30:00-4:00");
-				long eventId = Util.createCalendarEvent(this, date);
-				Log.d(TAG, "event:"+ eventId);
-				Log.d(TAG, "reminder: "+Util.addReminder(this, eventId));
+				if(airtime!=null && !airtime.equals(""))
+				{
+					Date date = Util.parseDate(airtime);
+					long eventId = Util.createCalendarEvent(this, date);
+					Util.addReminder(this, eventId);
+				}
+				
 				
 			} catch (ParseException e) {
 				Log.e(TAG, e.getMessage());

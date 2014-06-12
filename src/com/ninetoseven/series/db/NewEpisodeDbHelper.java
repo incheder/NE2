@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.ninetoseven.series.db.LastEpisodeContract.LastEntry;
 import com.ninetoseven.series.db.NextEpisodeContract.NextEntry;
+import com.ninetoseven.series.db.ReminderContract.ReminderEntry;
 import com.ninetoseven.series.db.ShowContract.ShowEntry;
 
 public class NewEpisodeDbHelper extends SQLiteOpenHelper{
@@ -48,12 +49,20 @@ public class NewEpisodeDbHelper extends SQLiteOpenHelper{
 			LastEntry.COLUMN_NAME_IMAGE + TEXT_TYPE + COMA_SEP+
 			LastEntry.COLUMN_NAME_AIRTIME + TEXT_TYPE +" );";
 	
+	private static final String SQL_CREATE_REMINDER = "CREATE TABLE "+ReminderEntry.TABLE_NAME+" ("+ReminderEntry._ID+" INTEGER PRIMARY KEY,"+
+			ReminderEntry.COLUMN_NAME_SHOW_ID + TEXT_TYPE + COMA_SEP+
+			ReminderEntry.COLUMN_NAME_STATUS + TEXT_TYPE + COMA_SEP+
+			ReminderEntry.COLUMN_NAME_EVENT_ID + TEXT_TYPE + COMA_SEP+
+			ReminderEntry.COLUMN_NAME_AIRTIME + TEXT_TYPE + COMA_SEP +" );";
+	
 	private static final String SQL_DELETE_SHOW =
 		    "DROP TABLE IF EXISTS " + ShowEntry.TABLE_NAME;
 	private static final String SQL_DELETE_NEXT_EPISODE =
 		    "DROP TABLE IF EXISTS " + NextEntry.TABLE_NAME;
 	private static final String SQL_DELETE_LAST_EPISODE =
 		    "DROP TABLE IF EXISTS " + LastEntry.TABLE_NAME;
+	private static final String SQL_DELETE_REMINDER =
+		    "DROP TABLE IF EXISTS " + ReminderEntry.TABLE_NAME;
 	
 
 	public NewEpisodeDbHelper(Context context) {
@@ -66,6 +75,7 @@ public class NewEpisodeDbHelper extends SQLiteOpenHelper{
 		db.execSQL(SQL_CREATE_SHOW);
 		db.execSQL(SQL_CREATE_NEXT_EPISODE);
 		db.execSQL(SQL_CREATE_LAST_EPISODE);
+		db.execSQL(SQL_CREATE_REMINDER);
 	}
 	
 	@Override
@@ -74,6 +84,7 @@ public class NewEpisodeDbHelper extends SQLiteOpenHelper{
 		  db.execSQL(SQL_DELETE_SHOW);
 		  db.execSQL(SQL_DELETE_NEXT_EPISODE);
 		  db.execSQL(SQL_DELETE_LAST_EPISODE);
+		  db.execSQL(SQL_DELETE_REMINDER);
 	      onCreate(db);
 	}
 	

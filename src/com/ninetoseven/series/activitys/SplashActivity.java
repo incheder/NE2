@@ -1,6 +1,8 @@
 package com.ninetoseven.series.activitys;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -22,6 +24,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.ninetoseven.series.db.LastEpisodeContract.LastEntry;
 import com.ninetoseven.series.db.NewEpisodeDbHelper;
 import com.ninetoseven.series.db.NextEpisodeContract.NextEntry;
+import com.ninetoseven.series.db.ReminderContract.ReminderEntry;
 import com.ninetoseven.series.db.ShowContract.ShowEntry;
 import com.ninetoseven.series.model.Episode;
 import com.ninetoseven.series.parser.EpisodeInfoParser;
@@ -155,12 +158,9 @@ public class SplashActivity extends Activity{
 				//añadimos el nuevo episodio si es que no es NULL
 				if(episodios[1]!=null)
 				{
-					if(!exist(db, episodios[1].getNumber(),NextEntry.COLUMN_NAME_NUMBER , NextEntry.TABLE_NAME))
+					if(!exist(db, episodios[1].getNumber(),NextEntry.COLUMN_NAME_NUMBER , NextEntry.TABLE_NAME,id))// si el episodio no esta en la base
 					{
-						
-					
-					
-						
+
 						ContentValues nextEp = new ContentValues();
 						
 						nextEp.put(NextEntry.COLUMN_NAME_NUMBER, episodios[1].getNumber());
@@ -168,10 +168,33 @@ public class SplashActivity extends Activity{
 						nextEp.put(NextEntry.COLUMN_NAME_AIRDATE, episodios[1].getAirdate());
 						nextEp.put(NextEntry.COLUMN_NAME_AIRTIME, episodios[1].getAirtime());
 						
-					db.update(NextEntry.TABLE_NAME, nextEp, "showid="+id, null);
+						db.update(NextEntry.TABLE_NAME, nextEp, "showid="+id, null);//solo hay un episodio nuevo por serie por eso se actualiza no se agrega
+						
+						if(getReminder(db,id).equals("1"))//añadir recordatorio 
 						{
+							ContentValues reminder = new ContentValues();
+							try {
+								if(episodios[1].getAirtime()!=null && !episodios[1].getAirtime().equals(""))
+								{
+									Date date = Util.parseDate(episodios[1].getAirtime());
+									long eventId = Util.createCalendarEvent(getApplicationContext(), date);
+									Util.addReminder(getApplicationContext(), eventId);
+									
+									reminder.put(ReminderEntry.COLUMN_NAME_STATUS, "1");
+									reminder.put(ReminderEntry.COLUMN_NAME_AIRTIME, episodios[1].getAirtime());
+									reminder.put(ReminderEntry.COLUMN_NAME_EVENT_ID, eventId);
+									reminder.put(ReminderEntry.COLUMN_NAME_SHOW_ID, episodios[1].getShowId());
+								}
+								
+								
+							} catch (ParseException e) {
+								Log.e(TAG, e.getMessage());
+							}
 							
 						}
+
+						
+						
 					}
 					
 				}
@@ -180,7 +203,7 @@ public class SplashActivity extends Activity{
 				//añadimos el ultimo episodio si es que no es null
 				if(episodios[0]!=null)
 				{
-					if(!exist(db, episodios[0].getNumber(),LastEntry.COLUMN_NAME_NUMBER , LastEntry.TABLE_NAME))
+					if(!exist(db, episodios[0].getNumber(),LastEntry.COLUMN_NAME_NUMBER , LastEntry.TABLE_NAME,id))
 					{//si no existe
 						ContentValues lastEp = new ContentValues();
 						
@@ -221,18 +244,33 @@ public class SplashActivity extends Activity{
 		}
 	}
 	
-	private boolean exist(SQLiteDatabase db,String id, String column, String table)
+	private boolean exist(SQLiteDatabase db,String target, String column, String table,String showid)
 	{
 		String[] projection={
 				column	
 			};
-		String selection=column+"='"+id+"'";
+		String selection=column+"='"+target+"'"+"AND "+NextEntry.COLUMN_NAME_SHOW_ID+" ='"+showid+"'";
 		Cursor c = db.query(table, projection, selection, null, null, null, null);
 		if(c.moveToFirst())
 		{
 			return true;
 		}
 		return false;
+		
+	}
+	
+	private String getReminder(SQLiteDatabase db,String id)
+	{
+		String[] projection={
+				ReminderEntry.COLUMN_NAME_STATUS	
+			};
+		String selection=ReminderEntry.COLUMN_NAME_SHOW_ID+"='"+id+"'";
+		Cursor c = db.query(ReminderEntry.TABLE_NAME, projection, selection, null, null, null, null);
+		if(c.moveToFirst())
+		{
+			return c.getString(0);
+		}
+		return "1";
 		
 	}
 

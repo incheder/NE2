@@ -125,7 +125,7 @@ public class Util {
 	public static long createCalendarEvent(Context context,Date date)
 	{
 		long eventID;
-		long calID = 3;
+		long calID = 1;
 		long startMillis = 0; 
 		//long endMillis = 0;     
 		//Calendar beginTime = Calendar.getInstance();
