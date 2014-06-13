@@ -27,6 +27,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.ninetoseven.series.R;
 import com.ninetoseven.series.model.ListEp;
 import com.ninetoseven.series.parser.EpisodeListParser;
+import com.ninetoseven.series.util.ReminderAlertDialog;
 import com.ninetoseven.series.util.Util;
 import com.ninetoseven.series.util.VolleySingleton;
 
@@ -74,6 +75,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 			try {
 				if(airtime!=null && !airtime.equals(""))
 				{
+					new ReminderAlertDialog().show(getSupportFragmentManager(),null);
 					Date date = Util.parseDate(airtime);
 					long eventId = Util.createCalendarEvent(this, date);
 					Util.addReminder(this, eventId);

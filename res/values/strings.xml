@@ -22,4 +22,10 @@
 	<string name="search_for_shows">Use the search menu to find TV Shows</string>
 	<string name="episode">Episode</string>
 	<string name="reminder">Reminder</string>
+	<string name="add_reminder">Add a reminder for new episodes of this show?</string>
+	<string-array name="reminder_array">
+	    <item >Add a reminder</item>
+	</string-array>
+	<string name="ok">OK</string>
+	<string name="cancel">Cancel</string>
 </resources>
