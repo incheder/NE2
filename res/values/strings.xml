@@ -24,7 +24,7 @@
 	<string name="reminder">Reminder</string>
 	<string name="add_reminder">Add a reminder for new episodes of this show?</string>
 	<string-array name="reminder_array">
-	    <item >Add a reminder</item>
+	    <item >Reminders in calendar</item>
 	</string-array>
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>

@@ -53,7 +53,7 @@ public class NewEpisodeDbHelper extends SQLiteOpenHelper{
 			ReminderEntry.COLUMN_NAME_SHOW_ID + TEXT_TYPE + COMA_SEP+
 			ReminderEntry.COLUMN_NAME_STATUS + TEXT_TYPE + COMA_SEP+
 			ReminderEntry.COLUMN_NAME_EVENT_ID + TEXT_TYPE + COMA_SEP+
-			ReminderEntry.COLUMN_NAME_AIRTIME + TEXT_TYPE + COMA_SEP +" );";
+			ReminderEntry.COLUMN_NAME_AIRTIME + TEXT_TYPE +" );";
 	
 	private static final String SQL_DELETE_SHOW =
 		    "DROP TABLE IF EXISTS " + ShowEntry.TABLE_NAME;

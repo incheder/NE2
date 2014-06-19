@@ -1,8 +1,8 @@
 package com.ninetoseven.series.activitys;
 
-import java.text.ParseException;
-import java.util.Date;
-
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -25,6 +25,8 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.ninetoseven.series.R;
+import com.ninetoseven.series.db.NewEpisodeDbHelper;
+import com.ninetoseven.series.db.ReminderContract.ReminderEntry;
 import com.ninetoseven.series.model.ListEp;
 import com.ninetoseven.series.parser.EpisodeListParser;
 import com.ninetoseven.series.util.ReminderAlertDialog;
@@ -41,7 +43,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 	private static String imageShow;
 	private ProgressBar pbLoading;
 	private ListEp lista;
-	private String airtime;
+	private String airtime,id;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 		setContentView(R.layout.episode_list_activity);
 		pbLoading = (ProgressBar)findViewById(R.id.pbLoadingList);
 		viewPager = (ViewPager)findViewById(R.id.pager);
-		String id =getIntent().getExtras().getString("showid");
+		id =getIntent().getExtras().getString("showid");
 		imageShow =getIntent().getExtras().getString("image");
 		String showName = getIntent().getExtras().getString("showName");
 		airtime = getIntent().getExtras().getString("airtime");
@@ -70,21 +72,22 @@ public class EpisodeListActivity extends ActionBarActivity{
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.calendar) {
-			try {
-				if(airtime!=null && !airtime.equals(""))
+		int ide = item.getItemId();
+		if (ide == R.id.calendar) {
+			//try {
+				//if(airtime!=null && !airtime.equals(""))
 				{
-					new ReminderAlertDialog().show(getSupportFragmentManager(),null);
-					Date date = Util.parseDate(airtime);
-					long eventId = Util.createCalendarEvent(this, date);
-					Util.addReminder(this, eventId);
+					new GetReminder(airtime).execute(id);
+					//Date date = Util.parseDate(airtime);
+					//long eventId = Util.createCalendarEvent(this, date);
+					//Util.addReminder(this, eventId);
 				}
 				
 				
-			} catch (ParseException e) {
-				Log.e(TAG, e.getMessage());
-			}
+			//}
+			//catch (ParseException e) {
+				Log.d(TAG,"airtime: "+airtime);
+			//}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -230,7 +233,51 @@ public class EpisodeListActivity extends ActionBarActivity{
 		
 	}
 	
+	private class GetReminder extends AsyncTask<String, Void, String>
+	{
+
+		String airtime;
+		public GetReminder(String airtime)
+		{
+			this.airtime=airtime;
+		}
+		@Override
+		protected String doInBackground(String... params) {
+			NewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(getBaseContext());
+			SQLiteDatabase db = neDbHelper.getWritableDatabase();
+
+			String[] projection={
+					ReminderEntry.COLUMN_NAME_STATUS	
+				};
+			String selection=ReminderEntry.COLUMN_NAME_SHOW_ID+"='"+params[0]+"'";
+			Cursor c = db.query(ReminderEntry.TABLE_NAME, projection, selection, null, null, null, null);
+			if(c.moveToFirst())
+			{
+				return c.getString(0);
+			}
+			return "0";
+		
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+		boolean[] checked = {false};
+		if(result.equals("1"))
+			{
+				checked[0] = true;
+			}
+		Bundle args = new Bundle();
+		args.putBooleanArray("checked", checked);
+		args.putString("airtime", airtime);
+		ReminderAlertDialog dialog = new ReminderAlertDialog();
+		dialog.setArguments(args);
+		dialog.show(getSupportFragmentManager(), null);
+		
+			
+		}
+	
 	
 		
 	
+	}
 }

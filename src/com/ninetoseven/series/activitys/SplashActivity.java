@@ -180,7 +180,7 @@ public class SplashActivity extends Activity{
 									long eventId = Util.createCalendarEvent(getApplicationContext(), date);
 									Util.addReminder(getApplicationContext(), eventId);
 									
-									reminder.put(ReminderEntry.COLUMN_NAME_STATUS, "1");
+									reminder.put(ReminderEntry.COLUMN_NAME_STATUS,"1");
 									reminder.put(ReminderEntry.COLUMN_NAME_AIRTIME, episodios[1].getAirtime());
 									reminder.put(ReminderEntry.COLUMN_NAME_EVENT_ID, eventId);
 									reminder.put(ReminderEntry.COLUMN_NAME_SHOW_ID, episodios[1].getShowId());
