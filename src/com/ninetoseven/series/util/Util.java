@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -122,7 +123,7 @@ public class Util {
 
 	}
 	
-	public static long createCalendarEvent(Context context,Date date)
+	public static long createCalendarEvent(Context context,Date date,String titulo, String descripcion)
 	{
 		long eventID;
 		long calID = 1;
@@ -139,8 +140,8 @@ public class Util {
 		ContentResolver cr = context.getContentResolver();
 		ContentValues values = new ContentValues();
 		values.put(Events.DTSTART, startMillis);
-		values.put(Events.TITLE, "titulo");
-		values.put(Events.DESCRIPTION, "descripcion");
+		values.put(Events.TITLE, titulo);
+		values.put(Events.DESCRIPTION, descripcion);
 		values.put(Events.CALENDAR_ID, calID);
 		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
 		values.put(Events.DURATION,"PT1H" );
@@ -148,6 +149,16 @@ public class Util {
 		eventID = uri.getLastPathSegment()==null ? 0 : Long.parseLong(uri.getLastPathSegment());
 		return eventID;
 	
+	}
+	
+	public static int deleteEvent(Context context, long eventID)
+	{
+		//ContentResolver cr = context.getContentResolver();
+		//ContentValues values = new ContentValues();
+		Uri deleteUri = null;
+		deleteUri = ContentUris.withAppendedId(Events.CONTENT_URI, eventID);
+		int rows = context.getContentResolver().delete(deleteUri, null, null);
+		return rows;
 	}
 	
 	public static long addReminder(Context context, long id)

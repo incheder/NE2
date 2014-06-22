@@ -43,7 +43,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 	private static String imageShow;
 	private ProgressBar pbLoading;
 	private ListEp lista;
-	private String airtime,id;
+	private String airtime,id,showName,title;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,8 @@ public class EpisodeListActivity extends ActionBarActivity{
 		viewPager = (ViewPager)findViewById(R.id.pager);
 		id =getIntent().getExtras().getString("showid");
 		imageShow =getIntent().getExtras().getString("image");
-		String showName = getIntent().getExtras().getString("showName");
+		showName = getIntent().getExtras().getString("showName");
+		title = getIntent().getExtras().getString("title");
 		airtime = getIntent().getExtras().getString("airtime");
 		getSupportActionBar().setTitle(showName);
 		readShow(RUTA+id);
@@ -236,7 +237,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 	private class GetReminder extends AsyncTask<String, Void, String>
 	{
 
-		String airtime;
+		String airtime,airtimeInDb,eventId;
 		public GetReminder(String airtime)
 		{
 			this.airtime=airtime;
@@ -247,12 +248,16 @@ public class EpisodeListActivity extends ActionBarActivity{
 			SQLiteDatabase db = neDbHelper.getWritableDatabase();
 
 			String[] projection={
-					ReminderEntry.COLUMN_NAME_STATUS	
+					ReminderEntry.COLUMN_NAME_STATUS,
+					ReminderEntry.COLUMN_NAME_AIRTIME,
+					ReminderEntry.COLUMN_NAME_EVENT_ID
 				};
 			String selection=ReminderEntry.COLUMN_NAME_SHOW_ID+"='"+params[0]+"'";
 			Cursor c = db.query(ReminderEntry.TABLE_NAME, projection, selection, null, null, null, null);
 			if(c.moveToFirst())
 			{
+				eventId=c.getString(2);
+				airtimeInDb=c.getString(1);
 				return c.getString(0);
 			}
 			return "0";
@@ -262,6 +267,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 		@Override
 		protected void onPostExecute(String result) {
 		boolean[] checked = {false};
+		Log.d(TAG, "result: "+result);
 		if(result.equals("1"))
 			{
 				checked[0] = true;
@@ -269,6 +275,20 @@ public class EpisodeListActivity extends ActionBarActivity{
 		Bundle args = new Bundle();
 		args.putBooleanArray("checked", checked);
 		args.putString("airtime", airtime);
+		args.putString("showId", id);
+		args.putString("showName", showName);
+		args.putString("title", title);
+		args.putString("eventId", eventId);
+		args.putString("status", result);
+		boolean sameAirtime=false;
+		if(airtime!=null&&airtime.equals(airtimeInDb))
+		{
+			
+			//si es el mismo airtime no hay que crear un nuevo evento
+			sameAirtime=true;
+			
+		}
+		args.putBoolean("sameAirtime", sameAirtime);
 		ReminderAlertDialog dialog = new ReminderAlertDialog();
 		dialog.setArguments(args);
 		dialog.show(getSupportFragmentManager(), null);

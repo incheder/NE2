@@ -347,11 +347,13 @@ public class MainActivity extends Activity {
 			String image = ((Episode)parent.getItemAtPosition(position)).getImage();
 			String showName = ((Episode)parent.getItemAtPosition(position)).getShowName();
 			String airtime = ((Episode)parent.getItemAtPosition(position)).getAirtime();
+			String title = ((Episode)parent.getItemAtPosition(position)).getTitle();
 			Intent intent = new Intent(getActivity(),EpisodeListActivity.class);
 			intent.putExtra("showid", showId);
 			intent.putExtra("image", image);
 			intent.putExtra("showName", showName);
 			intent.putExtra("airtime", airtime);
+			intent.putExtra("title", title);
 			
 			
 			startActivity(intent);

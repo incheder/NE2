@@ -177,7 +177,7 @@ public class SplashActivity extends Activity{
 								if(episodios[1].getAirtime()!=null && !episodios[1].getAirtime().equals(""))
 								{
 									Date date = Util.parseDate(episodios[1].getAirtime());
-									long eventId = Util.createCalendarEvent(getApplicationContext(), date);
+									long eventId = Util.createCalendarEvent(getApplicationContext(), date,episodios[1].getShowName(),episodios[1].getTitle());
 									Util.addReminder(getApplicationContext(), eventId);
 									
 									reminder.put(ReminderEntry.COLUMN_NAME_STATUS,"1");

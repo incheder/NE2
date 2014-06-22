@@ -1,7 +1,6 @@
 package com.ninetoseven.series.util;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.AlertDialog;
@@ -21,9 +20,11 @@ import com.ninetoseven.series.db.ReminderContract.ReminderEntry;
 
 public class ReminderAlertDialog extends DialogFragment{
 	
+	private final static String TAG = "NE2";
+	
 	boolean[] checked;
-	boolean addReminder;
-	String airtime,showId;
+	boolean addReminder,sameAirtime;
+	String airtime,showId,showName,title,eventId,status;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,12 +32,19 @@ public class ReminderAlertDialog extends DialogFragment{
 		checked = getArguments().getBooleanArray("checked");
 		airtime = getArguments().getString("airtime");
 		showId = getArguments().getString("showId");
+		showName = getArguments().getString("showName");
+		title = getArguments().getString("title");
+		eventId = getArguments().getString("eventId");
+		status = getArguments().getString("status");
+		sameAirtime=getArguments().getBoolean("sameAirtime");
+		addReminder=checked[0];
+		
 		
 	}
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-	    ArrayList mSelectedItems = new ArrayList();  // Where we track the selected items
+	    //ArrayList mSelectedItems = new ArrayList();  // Where we track the selected items
 	    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 	    // Set the dialog title
 	    builder.setTitle(R.string.reminder)
@@ -53,8 +61,10 @@ public class ReminderAlertDialog extends DialogFragment{
 	                     //  mSelectedItems.add(which);
 	                	   addReminder = true;
 	                   } 
+	                   else
 	                   //else if (mSelectedItems.contains(which)) 
 	                   {
+	                	   addReminder = false;
 	                       // Else, if the item is already in the array, remove it 
 	                     //  mSelectedItems.remove(Integer.valueOf(which));
 	                   }
@@ -64,9 +74,12 @@ public class ReminderAlertDialog extends DialogFragment{
 	           .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
-	                 if(addReminder != checked[0])//si el estatus seleccionado es diferente del que estaba guardado
+//	                 
+//	            	   Log.d(TAG, "addReminder: "+addReminder);
+//	            	   Log.d(TAG, "checked: "+checked[0]);
+//	            	   if(addReminder != checked[0])//si el estatus seleccionado es diferente del que estaba guardado
 	                 {
-	                	 
+	                	 new AddReminder(getActivity()).execute(airtime);
 	                 }
 	               }
 	           })
@@ -92,12 +105,54 @@ public class ReminderAlertDialog extends DialogFragment{
 			NewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(context);
 				SQLiteDatabase db = neDbHelper.getWritableDatabase();
 			ContentValues reminder = new ContentValues();
+			Log.d(TAG, "params0: "+params[0]);
+			Log.d(TAG, "addReminder: "+addReminder);
+			Log.d(TAG, "showId: "+ showId);
 			try {
-				if(params[0]!=null && !params[0].equals(""))
+				if(params[0]!=null && !params[0].equals(""))//si no esta vacio el airtime
 				{
-					Date date = Util.parseDate(params[0]);
-					long eventId = Util.createCalendarEvent(context, date);
-					Util.addReminder(context, eventId);
+					
+					
+					
+					if(addReminder)
+					{
+						reminder.put(ReminderEntry.COLUMN_NAME_STATUS,"1");
+						if(!sameAirtime)//si el airtime actual es diferente al airtime de la bd
+						{
+							Date date = Util.parseDate(params[0]);
+							long eventId = Util.createCalendarEvent(context, date,showName,title);
+							Util.addReminder(context, eventId);
+							reminder.put(ReminderEntry.COLUMN_NAME_EVENT_ID, eventId);
+						}
+						else if(status.equals("0"))//si el airtime es igual pero no habia eventos
+						{
+							Date date = Util.parseDate(params[0]);
+							long eventId = Util.createCalendarEvent(context, date,showName,title);
+							Util.addReminder(context, eventId);
+							reminder.put(ReminderEntry.COLUMN_NAME_EVENT_ID, eventId);
+						}
+					}
+					else
+					{
+						reminder.put(ReminderEntry.COLUMN_NAME_STATUS,"0");
+						if(eventId!=null)
+						{
+							Util.deleteEvent(context, Long.parseLong(eventId));
+						}
+						
+					}
+					
+					reminder.put(ReminderEntry.COLUMN_NAME_AIRTIME, params[0]);
+					
+					reminder.put(ReminderEntry.COLUMN_NAME_SHOW_ID, showId);
+					
+					if(db.update(ReminderEntry.TABLE_NAME, reminder, "showid="+showId, null)!=1)
+					{
+						db.insert(ReminderEntry.TABLE_NAME, null, reminder);
+					}
+				}
+				else
+				{
 					if(addReminder)
 					{
 						reminder.put(ReminderEntry.COLUMN_NAME_STATUS,"1");
@@ -105,16 +160,23 @@ public class ReminderAlertDialog extends DialogFragment{
 					else
 					{
 						reminder.put(ReminderEntry.COLUMN_NAME_STATUS,"0");
+						if(eventId!=null)
+						{
+							Util.deleteEvent(context, Long.parseLong(eventId));
+						}
 					}
-					
-					reminder.put(ReminderEntry.COLUMN_NAME_AIRTIME, params[0]);
-					reminder.put(ReminderEntry.COLUMN_NAME_EVENT_ID, eventId);
-					reminder.put(ReminderEntry.COLUMN_NAME_SHOW_ID, params[0]);
-					
-					db.update(ReminderEntry.TABLE_NAME, reminder, "showid="+showId, null);
+					reminder.put(ReminderEntry.COLUMN_NAME_SHOW_ID, showId);
+					if(db.update(ReminderEntry.TABLE_NAME, reminder, "showid="+showId, null)!=1)
+					{
+						
+						db.insert(ReminderEntry.TABLE_NAME, null, reminder);
+					}
 				}
 				
-				
+				if(db.isOpen())
+				{
+					db.close();
+				}
 			} catch (ParseException e) {
 				//Log.e(TAG, e.getMessage());
 			}
