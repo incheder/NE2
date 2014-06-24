@@ -41,7 +41,8 @@ import com.ninetoseven.series.util.VolleySingleton;
 public class ShowDescriptionActivity extends Activity {
 	private static final String TAG = "NE2";
 	public static final int TIMEOUT = 60000;
-	Bundle args = new Bundle();
+	private Bundle args = new Bundle();
+	private static boolean enable = true;
 	
 	
 	@Override
@@ -177,9 +178,15 @@ public class ShowDescriptionActivity extends Activity {
 		public void onClick(View v) {
 			if(v.getId()==btnSaveShow.getId())
 			{
-				saveShow(id);
-				NewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(getActivity());
-				SQLiteDatabase db = neDbHelper.getWritableDatabase();
+				if(enable)
+				{
+					saveShow(id);
+					enable=false;
+				}
+				//btnSaveShow.setBackgroundResource(R.drawable.blue_button_fill);
+				
+				//SNewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(getActivity());
+				//SQLiteDatabase db = neDbHelper.getWritableDatabase();
 			}
 			
 		}
@@ -302,6 +309,7 @@ public class ShowDescriptionActivity extends Activity {
 			Toast.makeText(getApplicationContext(),
 					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR),
 					Toast.LENGTH_SHORT).show();
+			enable=true;
 		}
 		
 	}
@@ -320,6 +328,7 @@ public class ShowDescriptionActivity extends Activity {
 			Toast.makeText(getApplicationContext(),
 					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS),
 					Toast.LENGTH_SHORT).show();
+			enable=true;
 		}
 		
 	}
