@@ -42,7 +42,8 @@ public class ShowDescriptionActivity extends Activity {
 	private static final String TAG = "NE2";
 	public static final int TIMEOUT = 60000;
 	private Bundle args = new Bundle();
-	private static boolean enable = true;
+	private PlaceholderFragment placeHolderFragment;
+	
 	
 	
 	@Override
@@ -60,7 +61,7 @@ public class ShowDescriptionActivity extends Activity {
 		IntentFilter mSaveIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ACTION);
 		IntentFilter mErrorIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ERROR);
 		if (savedInstanceState == null) {
-			PlaceholderFragment placeHolderFragment = new PlaceholderFragment();
+			placeHolderFragment = new PlaceholderFragment();
 			placeHolderFragment.setArguments(args);
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, placeHolderFragment).commit();
@@ -178,12 +179,14 @@ public class ShowDescriptionActivity extends Activity {
 		public void onClick(View v) {
 			if(v.getId()==btnSaveShow.getId())
 			{
-				if(enable)
-				{
+			
+					btnSaveShow.setBackgroundResource(R.drawable.blue_button_fill);
+					btnSaveShow.setText(getResources().getString(R.string.saved));
+					btnSaveShow.setEnabled(false);
 					saveShow(id);
-					enable=false;
-				}
-				//btnSaveShow.setBackgroundResource(R.drawable.blue_button_fill);
+				
+				
+				
 				
 				//SNewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(getActivity());
 				//SQLiteDatabase db = neDbHelper.getWritableDatabase();
@@ -291,6 +294,17 @@ public class ShowDescriptionActivity extends Activity {
 			queue.add(request);
 		}
 		
+		public void enableButton(boolean enable)
+		{
+			btnSaveShow.setEnabled(enable);
+			
+			if(enable)
+				{
+					btnSaveShow.setBackgroundResource(R.drawable.blue_button);
+					btnSaveShow.setText(getResources().getString(R.string.save));
+				}
+		}
+		
 		
 	}
 	
@@ -309,7 +323,8 @@ public class ShowDescriptionActivity extends Activity {
 			Toast.makeText(getApplicationContext(),
 					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR),
 					Toast.LENGTH_SHORT).show();
-			enable=true;
+			placeHolderFragment.enableButton(true);
+			
 		}
 		
 	}
@@ -328,7 +343,7 @@ public class ShowDescriptionActivity extends Activity {
 			Toast.makeText(getApplicationContext(),
 					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS),
 					Toast.LENGTH_SHORT).show();
-			enable=true;
+			
 		}
 		
 	}

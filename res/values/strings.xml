@@ -28,4 +28,5 @@
 	</string-array>
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
+	<string name="saved">Saved</string>
 </resources>
