@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.ninetoseven.series.R;
 import com.ninetoseven.series.adapter.NewEpisodeAdapter;
 import com.ninetoseven.series.db.LastEpisodeContract.LastEntry;
@@ -49,6 +50,8 @@ public class MainActivity extends Activity {
 	private PlaceholderFragment placeholderFragment;
 	private Toast toast;
 	private AdView adView;
+	private GoogleAnalytics ga;
+	
 	
 	
 	@Override
@@ -62,6 +65,9 @@ public class MainActivity extends Activity {
 	    		addTestDevice("E0041374D0D56B134E69FEED0194E481").
 	    		build();
 	    adView.loadAd(adRequest);
+	    ga =GoogleAnalytics.getInstance(getApplicationContext());//.newTracker("UA-52427110-1").enableAutoActivityTracking(true);
+	    ga.enableAutoActivityReports(getApplication());
+	    ga.newTracker("UA-52427110-1").enableAutoActivityTracking(true);
 	    
 		IntentFilter mDeleteIntentFilter = new IntentFilter(DeleteShowAlertDialog.BROADCAST_ACTION_DELETE);
 		IntentFilter mSaveIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ACTION);

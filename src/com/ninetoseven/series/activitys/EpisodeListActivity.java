@@ -26,6 +26,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.ninetoseven.series.R;
 import com.ninetoseven.series.db.NewEpisodeDbHelper;
 import com.ninetoseven.series.db.ReminderContract.ReminderEntry;
@@ -47,6 +48,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 	private ListEp lista;
 	private String airtime,id,showName,title;
 	private AdView adView;
+	private GoogleAnalytics ga;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,9 @@ public class EpisodeListActivity extends ActionBarActivity{
 	    		addTestDevice("E0041374D0D56B134E69FEED0194E481").
 	    		build();
 	    adView.loadAd(adRequest);
+	    ga =GoogleAnalytics.getInstance(getApplicationContext());//.newTracker("UA-52427110-1").enableAutoActivityTracking(true);
+	    ga.enableAutoActivityReports(getApplication());
+	    ga.newTracker("UA-52427110-1").enableAutoActivityTracking(true);
 		pbLoading = (ProgressBar)findViewById(R.id.pbLoadingList);
 		viewPager = (ViewPager)findViewById(R.id.pager);
 		id =getIntent().getExtras().getString("showid");
