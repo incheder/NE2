@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background" >
+    android:background="@color/background" 
+    android:orientation="vertical">
     
-     <ProgressBar
-        android:id="@+id/pbLoadingList"
+     <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-         style="?android:attr/progressBarStyleLarge" />
-	
-    
-    <android.support.v4.view.ViewPager
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="ca-app-pub-5503487934582948/3911707719" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ProgressBar
+            android:id="@+id/pbLoadingList"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <android.support.v4.view.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-           >
-    </android.support.v4.view.ViewPager>
-    
-    
+            android:layout_height="match_parent" >
+        </android.support.v4.view.ViewPager>
+    </FrameLayout>
 
-</FrameLayout>
+</LinearLayout>

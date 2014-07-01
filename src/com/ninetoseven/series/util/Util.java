@@ -20,6 +20,7 @@ import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 
@@ -27,7 +28,7 @@ public class Util {
 
 	private static int TIMEOUT = 60000;
 	private static final String TAG = "NE2";
-	private static final int NUMBER_TRYS = 3;
+	private static final int NUMBER_TRYS = 2;
 	public static DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(
 			TIMEOUT, NUMBER_TRYS, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
 
@@ -171,5 +172,14 @@ public class Util {
 		Uri uri = cr.insert(Reminders.CONTENT_URI, values);
 		return uri.getLastPathSegment()==null ? 0 : Long.parseLong(uri.getLastPathSegment());
 	}
+	
+	public static void showAToast (Toast toast, String message,Context context){
+		if(toast.getView()!=null && !toast.getView().isShown())
+		{
+			 toast.setText(message);
+			 toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+			 toast.show(); 
+		}
+    }
 
 }

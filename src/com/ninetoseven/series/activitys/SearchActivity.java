@@ -19,10 +19,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -30,6 +32,8 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.ninetoseven.series.R;
 import com.ninetoseven.series.adapter.SearchResultAdapter;
 import com.ninetoseven.series.model.Show;
@@ -42,7 +46,9 @@ import com.ninetoseven.series.util.VolleySingleton;
 public class SearchActivity extends Activity{
 
 	private static final String TAG = "NE2";
-	Bundle args = new Bundle();
+	private Bundle args = new Bundle();
+	private Toast toast;
+	private AdView adView;
 	
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -57,7 +63,11 @@ public class SearchActivity extends Activity{
 		setContentView(R.layout.activity_main);
 
 		handleIntent(getIntent());
-		
+		adView = (AdView)this.findViewById(R.id.adView);
+	    AdRequest adRequest = new AdRequest.Builder().
+	    		addTestDevice("E0041374D0D56B134E69FEED0194E481").
+	    		build();
+	    adView.loadAd(adRequest);
 		IntentFilter mSaveIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ACTION);
 		IntentFilter mErrorIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ERROR);
 		
@@ -76,11 +86,33 @@ public class SearchActivity extends Activity{
 		LocalBroadcastManager.getInstance(this).registerReceiver(mSaveReceiver, mSaveIntentFilter);
 	}
 	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		adView.resume();
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		adView.pause();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		adView.destroy();
+	}
+	
 	/**
 	 * Manejamos el intent con el query de la busqueda
 	 * @param intent que tiene el string para hacer el query
 	 */
 	 private void handleIntent(Intent intent) {
+		 toast = new Toast(getApplicationContext());
 		 String query="";
 	        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 	              
@@ -136,6 +168,7 @@ public class SearchActivity extends Activity{
 		private GridView gvSearch;
 		private ProgressBar pbLoading;
 		private ArrayList<Show> sList;
+		private TextView empty;
 		private String query;
 		public PlaceholderFragment() {
 		}
@@ -163,6 +196,8 @@ public class SearchActivity extends Activity{
 					false);
 			gvSearch = (GridView)rootView.findViewById(R.id.gvBusqueda);
 			gvSearch.setOnItemClickListener(this);
+			empty = (TextView)rootView.findViewById(R.id.emptySearch);
+			//gvSearch.setEmptyView(empty);
 			pbLoading = (ProgressBar)rootView.findViewById(R.id.pbLoadingSearch);
 			return rootView;
 		}
@@ -179,8 +214,10 @@ public class SearchActivity extends Activity{
 				sList=savedInstanceState.getParcelableArrayList("sList");
 				if(sList!=null)
 				{
+					
 					adapter = new SearchResultAdapter(getActivity(), sList);
 					gvSearch.setAdapter(adapter);
+					
 					pbLoading.setVisibility(View.GONE);
 				}
 				else
@@ -228,8 +265,9 @@ public class SearchActivity extends Activity{
 					if(response!=null)
 					{
 						sList= (ArrayList<Show>) new ShowSearchParser(response).parse();
-						if(sList!=null)
+						if(sList!=null && sList.size()!=0)
 						{
+							empty.setVisibility(View.GONE);
 							pbLoading.setVisibility(View.GONE);
 							adapter = new SearchResultAdapter(getActivity(), sList);
 							gvSearch.setAdapter(adapter);
@@ -238,11 +276,15 @@ public class SearchActivity extends Activity{
 						else
 						{
 							//hubo un probblema al leer el show
+							pbLoading.setVisibility(View.GONE);
+							empty.setVisibility(View.VISIBLE);
 							Log.e(TAG, "search list null");
 						}
 					}
 					else
 					{
+						pbLoading.setVisibility(View.GONE);
+						empty.setVisibility(View.VISIBLE);
 						Log.e(TAG, "response null");
 					}
 					
@@ -252,6 +294,8 @@ public class SearchActivity extends Activity{
 				@Override
 				public void onErrorResponse(VolleyError error) {
 				//manjemos el error poniendo una imagen de un gato
+					pbLoading.setVisibility(View.GONE);
+					empty.setVisibility(View.VISIBLE);
 					Log.e(TAG, "volley error: "+error.getMessage());
 					
 				}
@@ -276,9 +320,10 @@ public class SearchActivity extends Activity{
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			Log.d(TAG, "error al guardar");
-			Toast.makeText(getApplicationContext(),
-					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR),
-					Toast.LENGTH_SHORT).show();
+//			Toast.makeText(getApplicationContext(),
+//					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR),
+//					Toast.LENGTH_SHORT).show();
+			Util.showAToast(toast,intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR), context);
 		}
 		
 	}
@@ -294,9 +339,10 @@ public class SearchActivity extends Activity{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
-			Toast.makeText(getApplicationContext(),
-					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS),
-					Toast.LENGTH_SHORT).show();
+//			Toast.makeText(getApplicationContext(),
+//					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS),
+//					Toast.LENGTH_SHORT).show();
+			Util.showAToast(toast, intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS), context);
 		}
 		
 	}

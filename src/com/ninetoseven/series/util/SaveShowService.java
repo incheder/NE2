@@ -88,6 +88,7 @@ public class SaveShowService extends IntentService {
 					nextEp.put(NextEntry.COLUMN_NAME_TITLE, show.getNextepisode().getTitle());
 					nextEp.put(NextEntry.COLUMN_NAME_AIRDATE, show.getNextepisode().getAirdate());
 					nextEp.put(NextEntry.COLUMN_NAME_AIRTIME, show.getNextepisode().getAirtime());
+					nextEp.put(NextEntry.COLUMN_NAME_TEXT_AIRTIME, show.getNextepisode().getTextAirtime());
 					nextEp.put(NextEntry.COLUMN_NAME_IMAGE, show.getImage());
 					if(db.insert(NextEntry.TABLE_NAME, null, nextEp)==-1)
 					{
@@ -109,6 +110,7 @@ public class SaveShowService extends IntentService {
 					lastEp.put(LastEntry.COLUMN_NAME_TITLE, show.getLatestepisode().getTitle());
 					lastEp.put(LastEntry.COLUMN_NAME_AIRDATE, show.getLatestepisode().getAirdate());
 					lastEp.put(LastEntry.COLUMN_NAME_AIRTIME, show.getLatestepisode().getAirtime());
+					lastEp.put(LastEntry.COLUMN_NAME_TEXT_AIRTIME, show.getLatestepisode().getTextAirtime());
 					lastEp.put(LastEntry.COLUMN_NAME_IMAGE, show.getImage());
 					if(db.insert(LastEntry.TABLE_NAME, null, lastEp)==-1)
 					{

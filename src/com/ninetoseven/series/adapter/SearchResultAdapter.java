@@ -75,14 +75,15 @@ public class SearchResultAdapter extends BaseAdapter {
 		// Util.imageLoader.displayImage("file:///"+Util.getColumna("cache",
 		// context, lista.get(position).getId(),"Podcast"), holder.ivPod);
 	
-		if(r.nextInt(2)==1)
-		{
-			holder.ivShow.setImageResource(R.drawable.show);
-		}
-		else
-		{
-			holder.ivShow.setImageResource(R.drawable.show2);
-		}
+//		if(r.nextInt(2)==1)
+//		{
+//			holder.ivShow.setImageResource(R.drawable.show);
+//		}
+//		else
+//		{
+//			holder.ivShow.setImageResource(R.drawable.show2);
+//		}
+		
 		
 		holder.tvShowName.setText(sList.get(position).getShowName());
 		

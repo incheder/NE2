@@ -105,7 +105,7 @@ public class NewEpisodeAdapter extends BaseAdapter {
 		holder.tvEpisode.setText(eList.get(position).getNumber());
 		holder.tvEpisodeName.setText(eList.get(position).getTitle());
 		holder.tvDate.setText(eList.get(position).getAirdate());
-		holder.tvTime.setText(eList.get(position).getAirtime());
+		holder.tvTime.setText(eList.get(position).getTextAirtime());
 
 		return convertView;
 	}

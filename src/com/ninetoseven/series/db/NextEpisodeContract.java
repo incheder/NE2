@@ -18,6 +18,7 @@ public final class NextEpisodeContract {
 		public static final String COLUMN_NAME_AIRDATE = "airdate";
 		public static final String COLUMN_NAME_AIRTIME = "airtime";
 		public static final String COLUMN_NAME_IMAGE = "image";
+		public static final String COLUMN_NAME_TEXT_AIRTIME = "text_airtime";
 		
 	}
 

@@ -25,7 +25,7 @@ public class EpisodeInfoParser {
    // ArrayList<Item> listaItems;
     private final static String TAG="NE2";
     private boolean readDate;
- 
+    private String textAirtime;
     public EpisodeInfoParser(String url)
     {
         
@@ -53,6 +53,14 @@ public class EpisodeInfoParser {
             }
         });
         
+        root.getChild("airtime").setEndTextElementListener(
+                new EndTextElementListener(){
+                    public void end(String body) {
+                      
+                       textAirtime = body;
+                    }
+            });
+        
         latestepisode.setStartElementListener(new StartElementListener() {
             public void start(Attributes attrs) {
                 episode = new Episode();
@@ -64,6 +72,7 @@ public class EpisodeInfoParser {
 			@Override
 			public void end() {
 			//	show.setLatestepisode(episode);
+				episode.setTextAirtime(textAirtime);
 				arrayE[0]=episode;
 			}
 		});
@@ -79,6 +88,7 @@ public class EpisodeInfoParser {
 			@Override
 			public void end() {
 				//show.setNextepisode(episode);
+				episode.setTextAirtime(textAirtime);
 				arrayE[1]=episode;
 			}
 		});

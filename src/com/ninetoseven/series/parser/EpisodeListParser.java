@@ -23,7 +23,7 @@ public class EpisodeListParser {
 	private String rssUrl;
    // private Item itemActual;
     private ListEp listEp;
-    private List<Episode> lista;
+    private ArrayList<Episode> lista;
     private String temporada;
     Episode ep;
    // ArrayList<Item> listaItems;

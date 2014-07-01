@@ -9,6 +9,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
+    
+    <TextView
+        android:id="@+id/tvUps"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/ups"
+        android:visibility="gone"
+        android:textColor="@color/texto_empty" />
 
     <LinearLayout
         android:id="@+id/llEpisodeInfo"

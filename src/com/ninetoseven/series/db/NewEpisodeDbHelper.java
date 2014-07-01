@@ -32,6 +32,7 @@ public class NewEpisodeDbHelper extends SQLiteOpenHelper{
 	ShowEntry.COLUMN_NAME_TIMEZONE + TEXT_TYPE +" );";
 	
 	private static final String SQL_CREATE_NEXT_EPISODE = "CREATE TABLE "+NextEntry.TABLE_NAME+" ("+NextEntry._ID+" INTEGER PRIMARY KEY,"+
+			NextEntry.COLUMN_NAME_TEXT_AIRTIME + TEXT_TYPE + COMA_SEP+
 			NextEntry.COLUMN_NAME_SHOWNAME + TEXT_TYPE + COMA_SEP+
 			NextEntry.COLUMN_NAME_SHOW_ID + TEXT_TYPE + COMA_SEP+
 			NextEntry.COLUMN_NAME_NUMBER + TEXT_TYPE + COMA_SEP+
@@ -41,6 +42,7 @@ public class NewEpisodeDbHelper extends SQLiteOpenHelper{
 			NextEntry.COLUMN_NAME_AIRTIME + TEXT_TYPE +" );";
 	
 	private static final String SQL_CREATE_LAST_EPISODE = "CREATE TABLE "+LastEntry.TABLE_NAME+" ("+LastEntry._ID+" INTEGER PRIMARY KEY,"+
+			LastEntry.COLUMN_NAME_TEXT_AIRTIME + TEXT_TYPE + COMA_SEP+
 			LastEntry.COLUMN_NAME_SHOWNAME + TEXT_TYPE + COMA_SEP+
 			LastEntry.COLUMN_NAME_SHOW_ID + TEXT_TYPE + COMA_SEP+
 			LastEntry.COLUMN_NAME_NUMBER + TEXT_TYPE + COMA_SEP+

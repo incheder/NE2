@@ -155,7 +155,7 @@ public class SplashActivity extends Activity{
 				SQLiteDatabase db = neDbHelper.getWritableDatabase();
 				Episode[] episodios = params[0];
 				
-				//añadimos el nuevo episodio si es que no es NULL
+				//aÃ±adimos el nuevo episodio si es que no es NULL
 				if(episodios[1]!=null)
 				{
 					if(!exist(db, episodios[1].getNumber(),NextEntry.COLUMN_NAME_NUMBER , NextEntry.TABLE_NAME,id))// si el episodio no esta en la base
@@ -167,10 +167,11 @@ public class SplashActivity extends Activity{
 						nextEp.put(NextEntry.COLUMN_NAME_TITLE, episodios[1].getTitle());
 						nextEp.put(NextEntry.COLUMN_NAME_AIRDATE, episodios[1].getAirdate());
 						nextEp.put(NextEntry.COLUMN_NAME_AIRTIME, episodios[1].getAirtime());
+						nextEp.put(NextEntry.COLUMN_NAME_TEXT_AIRTIME, episodios[1].getTextAirtime());
 						
 						db.update(NextEntry.TABLE_NAME, nextEp, "showid="+id, null);//solo hay un episodio nuevo por serie por eso se actualiza no se agrega
 						
-						if(getReminder(db,id).equals("1"))//añadir recordatorio 
+						if(getReminder(db,id).equals("1"))//aï¿½adir recordatorio 
 						{
 							ContentValues reminder = new ContentValues();
 							try {
@@ -200,7 +201,7 @@ public class SplashActivity extends Activity{
 				}
 				
 				
-				//añadimos el ultimo episodio si es que no es null
+				//aï¿½adimos el ultimo episodio si es que no es null
 				if(episodios[0]!=null)
 				{
 					if(!exist(db, episodios[0].getNumber(),LastEntry.COLUMN_NAME_NUMBER , LastEntry.TABLE_NAME,id))
@@ -212,6 +213,7 @@ public class SplashActivity extends Activity{
 						lastEp.put(LastEntry.COLUMN_NAME_AIRDATE, episodios[0].getAirdate());
 						lastEp.put(LastEntry.COLUMN_NAME_AIRTIME, episodios[0].getAirtime());
 						lastEp.put(LastEntry.COLUMN_NAME_IMAGE,episodios[0].getImage());
+						lastEp.put(LastEntry.COLUMN_NAME_TEXT_AIRTIME,episodios[0].getTextAirtime());
 						db.update(LastEntry.TABLE_NAME, lastEp, "showid="+id, null);
 						
 					}

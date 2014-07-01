@@ -17,5 +17,14 @@
         android:layout_height="wrap_content"
         android:numColumns="1" >
     </GridView>
+    
+    <TextView
+        android:id="@+id/emptySearch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/search_empty"
+        android:visibility="gone"
+        android:textColor="@color/texto_empty" />
 
 </FrameLayout>

@@ -24,6 +24,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.ninetoseven.series.R;
 import com.ninetoseven.series.db.NewEpisodeDbHelper;
 import com.ninetoseven.series.db.ReminderContract.ReminderEntry;
@@ -44,12 +46,18 @@ public class EpisodeListActivity extends ActionBarActivity{
 	private ProgressBar pbLoading;
 	private ListEp lista;
 	private String airtime,id,showName,title;
+	private AdView adView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		queue = VolleySingleton.getInstance(this).getRequestQueue();
 		setContentView(R.layout.episode_list_activity);
+		adView = (AdView)this.findViewById(R.id.adView);
+	    AdRequest adRequest = new AdRequest.Builder().
+	    		addTestDevice("E0041374D0D56B134E69FEED0194E481").
+	    		build();
+	    adView.loadAd(adRequest);
 		pbLoading = (ProgressBar)findViewById(R.id.pbLoadingList);
 		viewPager = (ViewPager)findViewById(R.id.pager);
 		id =getIntent().getExtras().getString("showid");
@@ -58,9 +66,47 @@ public class EpisodeListActivity extends ActionBarActivity{
 		title = getIntent().getExtras().getString("title");
 		airtime = getIntent().getExtras().getString("airtime");
 		getSupportActionBar().setTitle(showName);
-		readShow(RUTA+id);
+		if(savedInstanceState==null)
+		{
+			readShow(RUTA+id);
+		}
+		else
+		{
+			
+			lista = savedInstanceState.getParcelable("lista");
+			Log.d(TAG, "lista create: "+lista.getListaEpisodios().size());
+			adapter = new MyAdapter(getSupportFragmentManager(),lista);
+			viewPager.setAdapter(adapter);
+			pbLoading.setVisibility(View.GONE);
+		}
 		
 		
+		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		adView.resume();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		adView.pause();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		adView.destroy();
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Log.d(TAG, "lista save: "+lista.getListaEpisodios().size());
+		outState.putParcelable("lista", lista);
 	}
 	
 	@Override

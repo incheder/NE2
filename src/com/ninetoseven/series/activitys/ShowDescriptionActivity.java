@@ -28,6 +28,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.ninetoseven.series.R;
 import com.ninetoseven.series.db.NewEpisodeDbHelper;
 import com.ninetoseven.series.model.Episode;
@@ -43,6 +45,9 @@ public class ShowDescriptionActivity extends Activity {
 	public static final int TIMEOUT = 60000;
 	private Bundle args = new Bundle();
 	private PlaceholderFragment placeHolderFragment;
+	private static Context context;
+	private Toast toast;
+	private AdView adView;
 	
 	
 	
@@ -58,13 +63,18 @@ public class ShowDescriptionActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		handleIntent(getIntent());
+		adView = (AdView)this.findViewById(R.id.adView);
+	    AdRequest adRequest = new AdRequest.Builder().
+	    		addTestDevice("E0041374D0D56B134E69FEED0194E481").
+	    		build();
+	    adView.loadAd(adRequest);
 		IntentFilter mSaveIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ACTION);
 		IntentFilter mErrorIntentFilter = new IntentFilter(SaveShowService.Constants.BROADCAST_ERROR);
 		if (savedInstanceState == null) {
 			placeHolderFragment = new PlaceholderFragment();
 			placeHolderFragment.setArguments(args);
 			getFragmentManager().beginTransaction()
-					.add(R.id.container, placeHolderFragment).commit();
+					.add(R.id.container, placeHolderFragment,"showDescription").commit();
 		}
 		ErrorReceiver mErrorReceiver = new ErrorReceiver();
 		LocalBroadcastManager.getInstance(this).registerReceiver(mErrorReceiver, mErrorIntentFilter);
@@ -74,9 +84,28 @@ public class ShowDescriptionActivity extends Activity {
 	}
 	
 	 private void handleIntent(Intent intent) {
-		 
+		 context = this;
+		 toast = new Toast(context);
 	      args.putString("id",intent.getStringExtra("id"));
 	    }
+	 
+	 @Override
+	protected void onResume() {
+		super.onResume();
+		adView.resume();
+	}
+	 
+	 @Override
+	protected void onPause() {
+		super.onPause();
+		adView.pause();
+	}
+	 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		adView.destroy();
+	} 
 
 	
 	
@@ -84,7 +113,7 @@ public class ShowDescriptionActivity extends Activity {
 
 		
 		private NetworkImageView ivShow;
-		private TextView tvSeason,tvStart,tvStatus,tvDuration,tvNetwork,tvTime,tvSummary;
+		private TextView tvSeason,tvStart,tvStatus,tvDuration,tvNetwork,tvTime,tvSummary,tvUps;
 		private ProgressBar pbLoading;
 		private LinearLayout llShowInfo;
 		private Button btnSaveShow;
@@ -132,6 +161,7 @@ public class ShowDescriptionActivity extends Activity {
 			tvStatus = (TextView)rootView.findViewById(R.id.tvStatus);
 			tvSummary = (TextView)rootView.findViewById(R.id.tvSummary);
 			tvTime = (TextView)rootView.findViewById(R.id.tvTime);
+			tvUps = (TextView)rootView.findViewById(R.id.tvUps);
 			pbLoading = (ProgressBar)rootView.findViewById(R.id.pbLoadingEpisode);
 			btnSaveShow = (Button)rootView.findViewById(R.id.btnSaveShow);
 			btnSaveShow.setOnClickListener(this);
@@ -224,6 +254,7 @@ public class ShowDescriptionActivity extends Activity {
 						show= new ShowInfoParser(response).parse();
 						if(show!=null)
 						{
+							tvUps.setVisibility(View.GONE);
 							Log.d(TAG, "showId: "+show.getId());
 							fillShowViews(show);
 							
@@ -245,6 +276,15 @@ public class ShowDescriptionActivity extends Activity {
 				public void onErrorResponse(VolleyError error) {
 				//manjemos el error
 					Log.e(TAG, "error volley: "+error.getMessage());
+					if(getActivity()!=null)
+					{
+						pbLoading.setVisibility(View.GONE);
+						/*Toast.makeText(getActivity(),
+								getResources().getString(R.string.ups),
+								Toast.LENGTH_SHORT).show();*/
+						tvUps.setVisibility(View.VISIBLE);
+					}
+					
 					
 				}
 			});
@@ -268,10 +308,10 @@ public class ShowDescriptionActivity extends Activity {
 						show.setNextepisode(arrayE[1]);//la posicion 1 tiene el siguiente episodio
 						
 								//Log.d(TAG, "next episode: "+show.getNextepisode().getTitle());
-								Intent saveShowService = new Intent(getActivity(),SaveShowService.class);
+								Intent saveShowService = new Intent(context,SaveShowService.class);
 								//saveShowService.setData(Uri.parse("data"));
 								saveShowService.putExtra("show", show);
-								getActivity().startService(saveShowService);
+								context.startService(saveShowService);
 						
 					
 					}
@@ -287,6 +327,15 @@ public class ShowDescriptionActivity extends Activity {
 				public void onErrorResponse(VolleyError error) {
 				//manjemos el error
 					Log.e(TAG, "volley error: "+error.getMessage());
+					if(getActivity()!=null)
+					{
+						enableButton(true);
+
+						Toast.makeText(getActivity(),
+								getResources().getString(R.string.error_saving),
+								Toast.LENGTH_SHORT).show();
+					}
+					
 					
 				}
 			});
@@ -320,10 +369,12 @@ public class ShowDescriptionActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			Log.d(TAG, "error al guardar");
-			Toast.makeText(getApplicationContext(),
-					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR),
-					Toast.LENGTH_SHORT).show();
-			placeHolderFragment.enableButton(true);
+			Util.showAToast(toast,intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR),context);
+			if(placeHolderFragment.getActivity()!=null)
+			{
+				placeHolderFragment.enableButton(true);
+			}
+					
 			
 		}
 		
@@ -340,11 +391,13 @@ public class ShowDescriptionActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
-			Toast.makeText(getApplicationContext(),
-					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS),
-					Toast.LENGTH_SHORT).show();
+			
+			Util.showAToast(toast,intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS),context);
+					
 			
 		}
 		
 	}
+	
+	
 }
