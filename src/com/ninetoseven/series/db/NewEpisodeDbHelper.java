@@ -10,6 +10,7 @@ import com.ninetoseven.series.db.ReminderContract.ReminderEntry;
 import com.ninetoseven.series.db.ShowContract.ShowEntry;
 
 public class NewEpisodeDbHelper extends SQLiteOpenHelper{
+	static NewEpisodeDbHelper instance = null;
 	
 	private static final String DATABASE_NAME = "NewEpisode.db";
 	private static final int DATABASE_VERSION = 1;
@@ -90,6 +91,13 @@ public class NewEpisodeDbHelper extends SQLiteOpenHelper{
 	      onCreate(db);
 	}
 	
+	
+	 public static NewEpisodeDbHelper getInstance(Context context) {
+	        if(instance == null) {
+	            instance = new NewEpisodeDbHelper(context);
+	        }
+	        return instance;
+	    }
 	
 
 }

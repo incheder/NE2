@@ -36,11 +36,15 @@ public class SaveShowService extends IntentService {
 		String error = null;
 		Show show = intent.getParcelableExtra("show");
 		
-		NewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(getBaseContext());
+		NewEpisodeDbHelper neDbHelper = NewEpisodeDbHelper.getInstance(getBaseContext());
 		try
 		{
 			SQLiteDatabase db = neDbHelper.getWritableDatabase();
-			if(exist(db, show.getId(),ShowEntry.COLUMN_NAME_SHOW_ID,ShowEntry.TABLE_NAME))
+			if(show.getStatus().equals("Ended"))
+			{
+				error =getApplicationContext().getResources().getString(R.string.show_ended);
+			}
+			else if(exist(db, show.getId(),ShowEntry.COLUMN_NAME_SHOW_ID,ShowEntry.TABLE_NAME))
 			{
 				//Toast.makeText(getApplicationContext(), R.string.show_already_saved, Toast.LENGTH_SHORT).show();
 				error =getApplicationContext().getResources().getString(R.string.show_already_saved);
@@ -71,7 +75,7 @@ public class SaveShowService extends IntentService {
 			}
 			
 			
-			//añadimos el nuevo episodio si es que no es NULL
+			//aï¿½adimos el nuevo episodio si es que no es NULL
 			if(show.getNextepisode()!=null)
 			{
 				if(exist(db, show.getNextepisode().getNumber(),NextEntry.COLUMN_NAME_NUMBER , NextEntry.TABLE_NAME))
@@ -98,7 +102,7 @@ public class SaveShowService extends IntentService {
 				}
 			}
 			
-			//añadimos el ultimo episodio si es que no es null
+			//aï¿½adimos el ultimo episodio si es que no es null
 			if(show.getLatestepisode()!=null)
 			{
 				if(!exist(db, show.getLatestepisode().getNumber(),LastEntry.COLUMN_NAME_NUMBER , LastEntry.TABLE_NAME))
@@ -124,7 +128,7 @@ public class SaveShowService extends IntentService {
 			
 			
 			
-			if(db.isOpen())
+			//if(db.isOpen())
 			{
 				db.close();
 			}

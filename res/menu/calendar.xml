@@ -6,6 +6,7 @@
         android:id="@+id/calendar"
         ne2:showAsAction="always"
         android:title="@string/reminder"
+        android:icon="@drawable/ic_action_event"
         />
 
 </menu>

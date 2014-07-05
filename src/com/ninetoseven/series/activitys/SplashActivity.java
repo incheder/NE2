@@ -21,6 +21,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.ninetoseven.series.R;
 import com.ninetoseven.series.db.LastEpisodeContract.LastEntry;
 import com.ninetoseven.series.db.NewEpisodeDbHelper;
 import com.ninetoseven.series.db.NextEpisodeContract.NextEntry;
@@ -37,8 +38,8 @@ public class SplashActivity extends Activity{
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_splash);
 		queue = VolleySingleton.getInstance(this).getRequestQueue();
 		new SearchNewEpisodes(this).execute();
 	}
@@ -52,7 +53,7 @@ public class SplashActivity extends Activity{
 		@Override
 		protected List<String> doInBackground(Void... params) {
 		
-			NewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(getBaseContext());
+			NewEpisodeDbHelper neDbHelper = NewEpisodeDbHelper.getInstance(context);
 			try
 			{
 				SQLiteDatabase db = neDbHelper.getReadableDatabase();
@@ -149,7 +150,7 @@ public class SplashActivity extends Activity{
 		}
 		@Override
 		protected Void doInBackground(Episode[]... params) {
-			NewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(getBaseContext());
+			NewEpisodeDbHelper neDbHelper = NewEpisodeDbHelper.getInstance(getBaseContext());
 			try
 			{
 				SQLiteDatabase db = neDbHelper.getWritableDatabase();

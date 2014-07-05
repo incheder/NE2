@@ -69,7 +69,7 @@ public class DeleteShowAlertDialog extends DialogFragment{
 
 		@Override
 		protected Integer doInBackground(String... params) {//params 0 el id
-			NewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(context);
+			NewEpisodeDbHelper neDbHelper = NewEpisodeDbHelper.getInstance(context);
 				SQLiteDatabase db = neDbHelper.getWritableDatabase();
 			String clause = "showid='"+params[0]+"'";
 			try {

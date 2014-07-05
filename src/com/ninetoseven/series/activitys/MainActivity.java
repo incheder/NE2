@@ -272,7 +272,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			protected List<Episode> doInBackground(Void... params) {
-				NewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(context);
+				NewEpisodeDbHelper neDbHelper = NewEpisodeDbHelper.getInstance(context);//use only one instancebcfg +
 				try
 				{
 					List<Episode>episodeList = new ArrayList<Episode>();

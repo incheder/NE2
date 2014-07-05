@@ -174,12 +174,28 @@ public class Util {
 	}
 	
 	public static void showAToast (Toast toast, String message,Context context){
-		if(toast.getView()!=null && !toast.getView().isShown())
+		Log.d(TAG, "getView: "+toast.getView());
+		if(toast.getView()==null)
 		{
-			 toast.setText(message);
-			 toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-			 toast.show(); 
+			toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+			
+			Log.d(TAG, "make text "+message);
+			
 		}
+		else
+		{
+			toast.setText(message);
+			Log.d(TAG, "set text ");
+		}
+		if(!toast.getView().isShown())
+		{
+			 if(message!=null)
+			 {
+				 toast.show(); 
+			 }
+			 
+		}
+		
     }
 
 }

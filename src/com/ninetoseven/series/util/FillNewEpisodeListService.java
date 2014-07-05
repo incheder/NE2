@@ -38,7 +38,7 @@ public class FillNewEpisodeListService extends IntentService {
 		String error = null;
 		//List<String> idList = intent.getStringArrayListExtra("idList");
 		
-		NewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(getBaseContext());
+		NewEpisodeDbHelper neDbHelper = NewEpisodeDbHelper.getInstance(getBaseContext());
 		try
 		{
 			ArrayList<Episode> eList = new ArrayList<Episode>();

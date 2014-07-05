@@ -22,7 +22,7 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/image_item_content_description"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_launcher" />
+            />
     </FrameLayout>
 
     <LinearLayout
@@ -71,7 +71,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/margen_columnas"
                         android:layout_weight="1"
-                        android:text="episode"
+                        android:text="@string/episode"
                         android:textColor="@color/text_label_description" />
 
                     <TextView
@@ -93,7 +93,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/margen_columnas"
                         android:layout_weight="1"
-                        android:text="airdate"
+                        android:text="@string/date"
                         android:textColor="@color/text_label_description" />
 
                     <TextView
@@ -115,7 +115,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/margen_columnas"
                         android:layout_weight="1"
-                        android:text="title"
+                        android:text="@string/title"
                         android:textColor="@color/text_label_description" />
 
                     <TextView

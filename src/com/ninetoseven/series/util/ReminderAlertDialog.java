@@ -102,7 +102,7 @@ public class ReminderAlertDialog extends DialogFragment{
 
 		@Override
 		protected Integer doInBackground(String... params) {//params 0 el airtime
-			NewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(context);
+			NewEpisodeDbHelper neDbHelper = NewEpisodeDbHelper.getInstance(context);
 				SQLiteDatabase db = neDbHelper.getWritableDatabase();
 			ContentValues reminder = new ContentValues();
 			Log.d(TAG, "params0: "+params[0]);

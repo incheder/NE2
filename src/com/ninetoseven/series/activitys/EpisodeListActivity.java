@@ -295,7 +295,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 		}
 		@Override
 		protected String doInBackground(String... params) {
-			NewEpisodeDbHelper neDbHelper = new NewEpisodeDbHelper(getBaseContext());
+			NewEpisodeDbHelper neDbHelper = NewEpisodeDbHelper.getInstance(getBaseContext());
 			SQLiteDatabase db = neDbHelper.getWritableDatabase();
 
 			String[] projection={
