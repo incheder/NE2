@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">NE2</string>
+    <string name="app_name">New Episode</string>
     <string name="search_hint">Search TV Shows</string>
      <string name="search_title">Search</string>
     <string name="action_settings">Settings</string>
@@ -25,7 +25,7 @@
 	<string name="reminder">Reminder</string>
 	<string name="add_reminder">Add a reminder for new episodes of this show?</string>
 	<string-array name="reminder_array">
-	    <item >Add reminders of new episodes of this show</item>
+	    <item >Add reminders for new episodes of this show?</item>
 	</string-array>
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
