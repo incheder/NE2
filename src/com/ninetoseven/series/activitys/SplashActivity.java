@@ -33,7 +33,7 @@ import com.ninetoseven.series.util.Util;
 import com.ninetoseven.series.util.VolleySingleton;
 
 public class SplashActivity extends Activity{
-	private static final String TAG = "NE2";
+	//private static final String TAG = "NE2";
 	RequestQueue queue;
 	
 	@Override
@@ -78,7 +78,7 @@ public class SplashActivity extends Activity{
 			}
 			catch(SQLiteException e)
 			{
-				Log.e(TAG, "error: "+e.getMessage());
+				//Log.e(TAG, "error: "+e.getMessage());
 			}
 			return null;
 			
@@ -124,7 +124,7 @@ public class SplashActivity extends Activity{
 				}
 				else
 				{
-					Log.e(TAG, "response null");
+					//Log.e(TAG, "response null");
 				}
 				
 			}
@@ -133,7 +133,7 @@ public class SplashActivity extends Activity{
 			@Override
 			public void onErrorResponse(VolleyError error) {
 			//manjemos el error
-				Log.e(TAG, "volley error: "+error.getMessage());
+				//Log.e(TAG, "volley error: "+error.getMessage());
 				
 			}
 		});
@@ -190,7 +190,7 @@ public class SplashActivity extends Activity{
 								
 								
 							} catch (ParseException e) {
-								Log.e(TAG, e.getMessage());
+								//Log.e(TAG, e.getMessage());
 							}
 							
 						}
@@ -234,7 +234,7 @@ public class SplashActivity extends Activity{
 			
 				catch(SQLiteException e)
 			{
-				Log.e(TAG, "error: "+e.getMessage());
+				//Log.e(TAG, "error: "+e.getMessage());
 			}
 			return null;
 		}

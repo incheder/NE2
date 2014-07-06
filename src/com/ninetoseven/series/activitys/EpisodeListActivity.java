@@ -38,7 +38,7 @@ import com.ninetoseven.series.util.VolleySingleton;
 
 public class EpisodeListActivity extends ActionBarActivity{
 	
-	private static final String TAG = "NE2";
+	//private static final String TAG = "NE2";
 	private static final String RUTA = "http://services.tvrage.com/myfeeds/episode_list.php?key=zCBJPmzNSndLMGeApDyD&sid=";
 	private MyAdapter adapter;
 	private ViewPager viewPager;
@@ -79,7 +79,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 		{
 			
 			lista = savedInstanceState.getParcelable("lista");
-			Log.d(TAG, "lista create: "+lista.getListaEpisodios().size());
+			//Log.d(TAG, "lista create: "+lista.getListaEpisodios().size());
 			adapter = new MyAdapter(getSupportFragmentManager(),lista);
 			viewPager.setAdapter(adapter);
 			pbLoading.setVisibility(View.GONE);
@@ -110,7 +110,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.d(TAG, "lista save: "+lista.getListaEpisodios().size());
+		//Log.d(TAG, "lista save: "+lista.getListaEpisodios().size());
 		outState.putParcelable("lista", lista);
 	}
 	
@@ -138,7 +138,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 				
 			//}
 			//catch (ParseException e) {
-				Log.d(TAG,"airtime: "+airtime);
+				//Log.d(TAG,"airtime: "+airtime);
 			//}
 			return true;
 		}
@@ -159,7 +159,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 				{
 //					Log.d(TAG, "response :"+response);
 					lista = new EpisodeListParser(response).parse();
-					Log.d(TAG, "lista size :"+lista.getListaEpisodios().size());
+					//Log.d(TAG, "lista size :"+lista.getListaEpisodios().size());
 					adapter = new MyAdapter(getSupportFragmentManager(),lista);
 					viewPager.setAdapter(adapter);
 					pbLoading.setVisibility(View.GONE);
@@ -175,7 +175,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 			@Override
 			public void onErrorResponse(VolleyError error) {
 			//manjemos el error
-				Log.e(TAG, "error volley: "+error.getMessage());
+				//Log.e(TAG, "error volley: "+error.getMessage());
 				
 			}
 		});
@@ -242,7 +242,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 		public void onActivityCreated(Bundle savedInstanceState){
 			super.onActivityCreated(savedInstanceState);
 			 ImageLoader imageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
-				Log.d(TAG, "image: "+imageEpisode);
+				//Log.d(TAG, "image: "+imageEpisode);
 				if(imageEpisode!=null)
 				{
 					ivEpisode.setImageUrl(imageEpisode, imageLoader);
@@ -318,7 +318,7 @@ public class EpisodeListActivity extends ActionBarActivity{
 		@Override
 		protected void onPostExecute(String result) {
 		boolean[] checked = {false};
-		Log.d(TAG, "result: "+result);
+		//Log.d(TAG, "result: "+result);
 		if(result.equals("1"))
 			{
 				checked[0] = true;

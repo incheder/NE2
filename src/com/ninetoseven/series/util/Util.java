@@ -27,7 +27,7 @@ import com.android.volley.DefaultRetryPolicy;
 public class Util {
 
 	private static int TIMEOUT = 60000;
-	private static final String TAG = "NE2";
+	//private static final String TAG = "NE2";
 	private static final int NUMBER_TRYS = 2;
 	public static DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(
 			TIMEOUT, NUMBER_TRYS, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -38,7 +38,7 @@ public class Util {
 
 		float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
 		float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-		Log.d(TAG, "width: " + dpWidth + " height: " + dpHeight);
+		//Log.d(TAG, "width: " + dpWidth + " height: " + dpHeight);
 	}
 
 	public static File getImageStorageDir(Context context, String directoryName) {
@@ -64,7 +64,7 @@ public class Util {
 			String directoryName) {
 		File pictureFile = getImageStorageDir(context, directoryName);
 		if (pictureFile == null) {
-			Log.d(TAG, "Error creating media file, check storage permissions: ");// e.getMessage());
+			//Log.d(TAG, "Error creating media file, check storage permissions: ");// e.getMessage());
 			return;
 		}
 		try {
@@ -72,9 +72,9 @@ public class Util {
 			image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
 			fos.close();
 		} catch (FileNotFoundException e) {
-			Log.d(TAG, "File not found: " + e.getMessage());
+			//Log.d(TAG, "File not found: " + e.getMessage());
 		} catch (IOException e) {
-			Log.d(TAG, "Error accessing file: " + e.getMessage());
+			//Log.d(TAG, "Error accessing file: " + e.getMessage());
 		}
 	}
 
@@ -174,18 +174,18 @@ public class Util {
 	}
 	
 	public static void showAToast (Toast toast, String message,Context context){
-		Log.d(TAG, "getView: "+toast.getView());
+		
 		if(toast.getView()==null)
 		{
 			toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
 			
-			Log.d(TAG, "make text "+message);
+			
 			
 		}
 		else
 		{
 			toast.setText(message);
-			Log.d(TAG, "set text ");
+			
 		}
 		if(!toast.getView().isShown())
 		{

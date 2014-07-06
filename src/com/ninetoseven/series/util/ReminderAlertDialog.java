@@ -20,7 +20,7 @@ import com.ninetoseven.series.db.ReminderContract.ReminderEntry;
 
 public class ReminderAlertDialog extends DialogFragment{
 	
-	private final static String TAG = "NE2";
+	//private final static String TAG = "NE2";
 	
 	boolean[] checked;
 	boolean addReminder,sameAirtime;
@@ -105,9 +105,7 @@ public class ReminderAlertDialog extends DialogFragment{
 			NewEpisodeDbHelper neDbHelper = NewEpisodeDbHelper.getInstance(context);
 				SQLiteDatabase db = neDbHelper.getWritableDatabase();
 			ContentValues reminder = new ContentValues();
-			Log.d(TAG, "params0: "+params[0]);
-			Log.d(TAG, "addReminder: "+addReminder);
-			Log.d(TAG, "showId: "+ showId);
+			
 			try {
 				if(params[0]!=null && !params[0].equals(""))//si no esta vacio el airtime
 				{

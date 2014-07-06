@@ -46,7 +46,7 @@ import com.ninetoseven.series.util.VolleySingleton;
 
 public class SearchActivity extends Activity{
 
-	private static final String TAG = "NE2";
+	//private static final String TAG = "NE2";
 	private Bundle args = new Bundle();
 	private Toast toast;
 	private AdView adView;
@@ -132,7 +132,7 @@ public class SearchActivity extends Activity{
 				   
 				} catch (UnsupportedEncodingException e) {
 					
-					Log.e(TAG, "error:"+e.getMessage());
+					//Log.e(TAG, "error:"+e.getMessage());
 				}
 	        }
 	    }
@@ -283,14 +283,14 @@ public class SearchActivity extends Activity{
 							//hubo un probblema al leer el show
 							pbLoading.setVisibility(View.GONE);
 							empty.setVisibility(View.VISIBLE);
-							Log.e(TAG, "search list null");
+							//Log.e(TAG, "search list null");
 						}
 					}
 					else
 					{
 						pbLoading.setVisibility(View.GONE);
 						empty.setVisibility(View.VISIBLE);
-						Log.e(TAG, "response null");
+						//Log.e(TAG, "response null");
 					}
 					
 				}
@@ -301,7 +301,7 @@ public class SearchActivity extends Activity{
 				//manjemos el error poniendo una imagen de un gato
 					pbLoading.setVisibility(View.GONE);
 					empty.setVisibility(View.VISIBLE);
-					Log.e(TAG, "volley error: "+error.getMessage());
+					//Log.e(TAG, "volley error: "+error.getMessage());
 					
 				}
 			});
@@ -324,7 +324,7 @@ public class SearchActivity extends Activity{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
-			Log.d(TAG, "error al guardar");
+			//Log.d(TAG, "error al guardar");
 //			Toast.makeText(getApplicationContext(),
 //					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR),
 //					Toast.LENGTH_SHORT).show();

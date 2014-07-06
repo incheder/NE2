@@ -17,7 +17,7 @@ public class ShowInfoParser {
    // private Item itemActual;
     private Show show;
    // ArrayList<Item> listaItems;
-    private final static String TAG="NE2";
+    //private final static String TAG="NE2";
  
     public ShowInfoParser(String url)
     {

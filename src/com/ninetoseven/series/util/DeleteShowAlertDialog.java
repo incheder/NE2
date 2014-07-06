@@ -23,7 +23,7 @@ import com.ninetoseven.series.db.ShowContract.ShowEntry;
 
 public class DeleteShowAlertDialog extends DialogFragment{
 	
-	private final static String TAG = "NE2";
+	//private final static String TAG = "NE2";
 	public static final String BROADCAST_ACTION_DELETE ="com.ninetoseven.series.util.SaveShowService.DELETE";
 	
 	String showId;
@@ -94,7 +94,7 @@ public class DeleteShowAlertDialog extends DialogFragment{
 					db.close();
 				}
 			} catch (Exception e) {
-				Log.e(TAG, e.getMessage());
+				//Log.e(TAG, e.getMessage());
 			}
 			return null;
 		}

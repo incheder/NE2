@@ -45,7 +45,7 @@ import com.ninetoseven.series.util.Util;
 
 public class MainActivity extends Activity {
 
-	private static final String TAG = "NE2";
+	//private static final String TAG = "NE2";
 	private static final String FRAGMENT_TAG = "ne_list";
 	private PlaceholderFragment placeholderFragment;
 	private Toast toast;
@@ -57,7 +57,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.i(TAG, "activity onCreate");
+		//Log.i(TAG, "activity onCreate");
 		setContentView(R.layout.activity_main);
 		toast = new Toast(this);
 		adView = (AdView)this.findViewById(R.id.adView);
@@ -97,7 +97,7 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		adView.resume();
-		Log.i(TAG, "activity onResume");
+		//Log.i(TAG, "activity onResume");
 	//	Intent fillListService = new Intent(this,FillNewEpisodeListService.class);
 		//startService(fillListService);
 		
@@ -162,7 +162,7 @@ public class MainActivity extends Activity {
 		
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
-			Log.i(TAG, "fragment onCreate");
+			//Log.i(TAG, "fragment onCreate");
 			super.onCreate(savedInstanceState);
 			
 			
@@ -180,7 +180,7 @@ public class MainActivity extends Activity {
 			gvNuevosEpisodios.setOnItemLongClickListener(this);
 			if(savedInstanceState==null)
 			{
-				Log.d(TAG, "savedInstanceState null");
+				//Log.d(TAG, "savedInstanceState null");
 				eList = new ArrayList<Episode>();
 				//setActualiza();
 				if(fillListTask==null)
@@ -192,7 +192,7 @@ public class MainActivity extends Activity {
 			}
 			else
 			{
-				Log.d(TAG, "savedInstanceState NOT null");
+				//Log.d(TAG, "savedInstanceState NOT null");
 				eList = savedInstanceState.getParcelableArrayList("eList");
 				adapter = new NewEpisodeAdapter(getActivity(), eList);
 				gvNuevosEpisodios.setAdapter(adapter);
@@ -202,7 +202,7 @@ public class MainActivity extends Activity {
 		
 		@Override
 		public void onResume() {
-			Log.i(TAG, "fragment onResume");
+			//Log.i(TAG, "fragment onResume");
 			super.onResume();
 			
 			
@@ -213,7 +213,7 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated method stub
 			super.onSaveInstanceState(outState);
 			outState.putParcelableArrayList("eList", eList);
-			Log.d(TAG, "lista size: "+eList.size());
+			//Log.d(TAG, "lista size: "+eList.size());
 		}
 		
 		
@@ -454,7 +454,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
-			Log.d(TAG, "delete grid");
+			//Log.d(TAG, "delete grid");
 			placeholderFragment.setActualiza();
 			
 			
@@ -477,7 +477,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
-			Log.d(TAG, "actualiza grid");
+			//Log.d(TAG, "actualiza grid");
 //			Toast.makeText(getApplicationContext(),
 //					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_STATUS),
 //					Toast.LENGTH_SHORT).show();
@@ -504,7 +504,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
-			Log.d(TAG, "error al guardar");
+			//Log.d(TAG, "error al guardar");
 //			Toast.makeText(getApplicationContext(),
 //					intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR),
 //					Toast.LENGTH_SHORT).show();

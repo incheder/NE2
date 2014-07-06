@@ -20,7 +20,7 @@ import com.ninetoseven.series.util.VolleySingleton;
 
 public class NewEpisodeAdapter extends BaseAdapter {
 
-	private static final String TAG = "NE2";
+	//private static final String TAG = "NE2";
 	private Context context;
 	private List<Episode> eList;
 	Random r = new Random();
@@ -88,7 +88,7 @@ public class NewEpisodeAdapter extends BaseAdapter {
 												// que reuse el view
 		// Util.imageLoader.displayImage("file:///"+Util.getColumna("cache",
 		// context, lista.get(position).getId(),"Podcast"), holder.ivPod);
-		Log.d(TAG, "image: "+eList.get(position).getImage());
+		//Log.d(TAG, "image: "+eList.get(position).getImage());
 		ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
 		holder.ivShow.setImageUrl(eList.get(position).getImage(), imageLoader);
 	

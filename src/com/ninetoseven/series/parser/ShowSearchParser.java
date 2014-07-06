@@ -20,7 +20,7 @@ public class ShowSearchParser {
 	private String rssUrl;
     private List<Show> showList;
 	private Show show;
-    private final static String TAG="NE2";
+    //private final static String TAG="NE2";
  
     public ShowSearchParser(String url)
     {

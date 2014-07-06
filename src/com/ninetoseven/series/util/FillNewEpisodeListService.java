@@ -21,7 +21,7 @@ import com.ninetoseven.series.model.Episode;
 
 public class FillNewEpisodeListService extends IntentService {
 
-	private static final String TAG = "NE2";
+	//private static final String TAG = "NE2";
 
 
 	    
@@ -103,7 +103,7 @@ public class FillNewEpisodeListService extends IntentService {
 						}
 						else//tampoco encontro un ultimo episodio
 						{
-							Log.e(TAG, "no hay eisodio nuevo ni ultimo del id: "+idList.get(i));
+							//Log.e(TAG, "no hay eisodio nuevo ni ultimo del id: "+idList.get(i));
 							
 						}
 					}
@@ -114,7 +114,7 @@ public class FillNewEpisodeListService extends IntentService {
 			else
 			{
 				//no hay shows en la bd
-				Log.e(TAG, "no hay shows en la bd");
+				//Log.e(TAG, "no hay shows en la bd");
 			}
 			
 			
@@ -139,7 +139,7 @@ public class FillNewEpisodeListService extends IntentService {
 			 
 		}catch(SQLiteException e)
 		{
-			Log.e(TAG, "error: "+e.getMessage());
+			//Log.e(TAG, "error: "+e.getMessage());
 		}
 
 	}

@@ -23,7 +23,7 @@ public class EpisodeInfoParser {
     private Episode latestE,nextE;
     Episode [] arrayE;
    // ArrayList<Item> listaItems;
-    private final static String TAG="NE2";
+    //private final static String TAG="NE2";
     private boolean readDate;
     private String textAirtime;
     public EpisodeInfoParser(String url)

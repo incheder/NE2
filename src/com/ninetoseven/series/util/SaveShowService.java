@@ -19,7 +19,7 @@ import com.ninetoseven.series.model.Show;
 
 public class SaveShowService extends IntentService {
 
-	private static final String TAG = "NE2";
+	//private static final String TAG = "NE2";
 
 
 	    
@@ -84,7 +84,7 @@ public class SaveShowService extends IntentService {
 				}
 				else
 				{
-					Log.d(TAG, "db image "+show.getImage());
+					//Log.d(TAG, "db image "+show.getImage());
 					ContentValues nextEp = new ContentValues();
 					nextEp.put(NextEntry.COLUMN_NAME_SHOWNAME, show.getShowName());
 					nextEp.put(NextEntry.COLUMN_NAME_SHOW_ID, show.getId());
@@ -152,7 +152,7 @@ public class SaveShowService extends IntentService {
 			 
 		}catch(SQLiteException e)
 		{
-			Log.e(TAG, "error: "+e.getMessage());
+			//Log.e(TAG, "error: "+e.getMessage());
 		}
 
 	}

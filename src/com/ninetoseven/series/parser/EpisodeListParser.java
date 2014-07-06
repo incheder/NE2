@@ -27,7 +27,7 @@ public class EpisodeListParser {
     private String temporada;
     Episode ep;
    // ArrayList<Item> listaItems;
-    private final static String TAG="NE2";
+    //private final static String TAG="NE2";
  
     public EpisodeListParser(String url)
     {

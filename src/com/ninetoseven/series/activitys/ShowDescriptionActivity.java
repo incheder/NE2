@@ -42,7 +42,7 @@ import com.ninetoseven.series.util.Util;
 import com.ninetoseven.series.util.VolleySingleton;
 
 public class ShowDescriptionActivity extends Activity {
-	private static final String TAG = "NE2";
+	//private static final String TAG = "NE2";
 	public static final int TIMEOUT = 60000;
 	private Bundle args = new Bundle();
 	private PlaceholderFragment placeHolderFragment;
@@ -260,7 +260,7 @@ public class ShowDescriptionActivity extends Activity {
 						if(show!=null)
 						{
 							tvUps.setVisibility(View.GONE);
-							Log.d(TAG, "showId: "+show.getId());
+							//Log.d(TAG, "showId: "+show.getId());
 							fillShowViews(show);
 							
 						}
@@ -280,7 +280,7 @@ public class ShowDescriptionActivity extends Activity {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 				//manjemos el error
-					Log.e(TAG, "error volley: "+error.getMessage());
+					//Log.e(TAG, "error volley: "+error.getMessage());
 					if(getActivity()!=null)
 					{
 						pbLoading.setVisibility(View.GONE);
@@ -322,7 +322,7 @@ public class ShowDescriptionActivity extends Activity {
 					}
 					else
 					{
-						Log.e(TAG, "response null");
+						//Log.e(TAG, "response null");
 					}
 					
 				}
@@ -331,7 +331,7 @@ public class ShowDescriptionActivity extends Activity {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 				//manjemos el error
-					Log.e(TAG, "volley error: "+error.getMessage());
+					//Log.e(TAG, "volley error: "+error.getMessage());
 					if(getActivity()!=null)
 					{
 						enableButton(true);
@@ -373,7 +373,7 @@ public class ShowDescriptionActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
-			Log.d(TAG, "error al guardar");
+			//Log.d(TAG, "error al guardar");
 			Util.showAToast(toast,intent.getStringExtra(SaveShowService.Constants.EXTENDED_DATA_ERROR),context);
 			if(placeHolderFragment.getActivity()!=null)
 			{
